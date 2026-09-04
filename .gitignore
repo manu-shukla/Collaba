@@ -1,0 +1,15 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+.vite
+.env
+.env.local
+.env.*.local
+
+# Firebase CLI: emulator logs and local emulator state
+firestore-debug.log
+ui-debug.log
+firebase-debug.log
+.firebase

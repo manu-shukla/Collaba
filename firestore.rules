@@ -1,0 +1,45 @@
+rules_version = '2';
+
+// Security rules for the collaba-cfe51 project.
+//
+// This is the actual security boundary for the landing page. The Firebase config
+// in src/lib/firebase.ts ships to every visitor, so anyone can address this
+// database — what stops them doing anything but leaving a lead is this file.
+//
+// Deliberately field-agnostic: no field is named anywhere below, so renaming,
+// adding or removing a form field never requires touching these rules. The cost
+// is that the shape of a lead is checked in the browser only — see the note on
+// `create` below.
+//
+// Deploy with:  firebase deploy --only firestore:rules
+// Rules edited in the console are NOT reflected here; change them here and deploy.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /leads/{leadId} {
+      // Anyone may submit a lead — the form is public, so this has to be.
+      //
+      // The only limit is a cap on how many fields one document may carry: it
+      // costs nothing, needs no knowledge of what the fields are called, and
+      // stops the collection being used as free storage by someone posting
+      // directly. It does NOT validate a lead; a scripted client can still write
+      // a lead with nonsense in it, or without consent. That is the trade for
+      // rules that survive a change to the form.
+      allow create: if request.resource.data.size() <= 30;
+
+      // The important half. Leads are read through the Firebase console or a
+      // server credential, both of which bypass these rules — so nothing is lost
+      // by closing client reads, and a publicly readable leads collection would
+      // mean publishing every submitter's name, email and phone number. No
+      // updates or deletes either: a submitted lead is a record, and nobody from
+      // the web should be able to rewrite or erase one.
+      allow read, update, delete: if false;
+    }
+
+    // Everything else is closed. Without this, a collection added later is
+    // unprotected until someone remembers to write a rule for it.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

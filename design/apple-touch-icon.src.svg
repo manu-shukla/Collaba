@@ -1,0 +1,28 @@
+<!--
+  Source for public/apple-touch-icon.png (180x180 home-screen icon).
+
+  Authored at 1024x1024 because QuickLook only rasterises an SVG 1:1 when the
+  requested thumbnail size equals the intrinsic size; it is downscaled to 180
+  afterwards. Regenerate via design/regen-images.sh.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="plate" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5b45f5"/>
+      <stop offset="1" stop-color="#4935d4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- iOS applies its own rounded mask, so the plate is a full-bleed square. -->
+  <rect width="1024" height="1024" fill="url(#plate)"/>
+
+  <!-- IconNodes from src/components/Icons.tsx, drawn in its native 24-unit space
+       and scaled to fill the middle ~52% of the plate. -->
+  <g transform="translate(246 246) scale(22.17)" fill="none" stroke="#ffffff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="5" cy="12" r="3"/>
+    <circle cx="19" cy="5" r="3"/>
+    <circle cx="19" cy="19" r="3"/>
+    <path d="M7.7 10.7 16.3 6.3"/>
+    <path d="M7.7 13.3 16.3 17.7"/>
+  </g>
+</svg>

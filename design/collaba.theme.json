@@ -1,0 +1,855 @@
+{
+  "meta": {
+    "name": "Collaba Core",
+    "id": "collaba-core",
+    "version": "2.0.0",
+    "status": "implementation-ready",
+    "description": "Reusable V2 design language for the Collaba.in campaign-request website and future business and creator product surfaces.",
+    "defaultMode": "light",
+    "baseUnitPx": 8,
+    "wcagTarget": "WCAG 2.2 AA"
+  },
+  "brand": {
+    "personality": [
+      "credible",
+      "human",
+      "focused",
+      "optimistic",
+      "practical"
+    ],
+    "experiencePrinciples": [
+      "relevance_before_reach",
+      "clarity_before_cleverness",
+      "one_primary_action_per_view",
+      "honest_evidence_only",
+      "calm_guided_progress"
+    ],
+    "voice": {
+      "tone": "clear, warm, direct, and outcome-oriented",
+      "preferredTerms": [
+        "right-fit audience",
+        "relevant reach",
+        "qualified attention",
+        "creator-audience fit",
+        "measurable outcomes",
+        "Instagram creators",
+        "YouTube creators",
+        "Facebook creators",
+        "creator campaigns",
+        "influencer marketing"
+      ],
+      "avoidTerms": [
+        "guaranteed viral",
+        "perfect audience",
+        "instant ROI",
+        "best influencers",
+        "limited spots",
+        "platform partner",
+        "platform endorsed"
+      ]
+    },
+    "supportedPlatforms": [
+      {
+        "id": "instagram",
+        "label": "Instagram creators",
+        "formats": [
+          "Reels",
+          "Stories",
+          "posts"
+        ],
+        "assetPath": "/icons/platform/instagram.svg"
+      },
+      {
+        "id": "youtube",
+        "label": "YouTube creators",
+        "formats": [
+          "videos",
+          "Shorts",
+          "reviews",
+          "explainers",
+          "integrations"
+        ],
+        "assetPath": "/icons/platform/youtube.svg"
+      },
+      {
+        "id": "facebook",
+        "label": "Facebook creators",
+        "formats": [
+          "videos",
+          "posts",
+          "community-led local discovery"
+        ],
+        "assetPath": "/icons/platform/facebook.svg"
+      }
+    ]
+  },
+  "tokens": {
+    "color": {
+      "primitive": {
+        "white": "#FFFFFF",
+        "black": "#000000",
+        "ink50": "#F7F6FA",
+        "ink100": "#EFEDF5",
+        "ink200": "#DDD8E8",
+        "ink300": "#C2BCD2",
+        "ink400": "#948DA8",
+        "ink500": "#716B84",
+        "ink600": "#5D576E",
+        "ink700": "#443F54",
+        "ink800": "#2B2739",
+        "ink900": "#171426",
+        "indigo50": "#F3F1FF",
+        "indigo100": "#E7E2FF",
+        "indigo200": "#CFC6FF",
+        "indigo300": "#AA9AFF",
+        "indigo400": "#826CFF",
+        "indigo500": "#5B45F5",
+        "indigo600": "#4935D4",
+        "indigo700": "#3B2BB5",
+        "indigo800": "#30238F",
+        "indigo900": "#261C6B",
+        "coral50": "#FFF3F1",
+        "coral100": "#FFE2DE",
+        "coral200": "#FFC8C1",
+        "coral300": "#FFA095",
+        "coral400": "#FF6B5F",
+        "coral500": "#E65347",
+        "coral600": "#C24135",
+        "coral700": "#9F342B",
+        "green50": "#ECFDF3",
+        "green600": "#15803D",
+        "amber50": "#FFFAEB",
+        "amber700": "#B54708",
+        "red50": "#FEF3F2",
+        "red700": "#B42318"
+      },
+      "semantic": {
+        "background": {
+          "canvas": "{color.primitive.ink50}",
+          "surface": "{color.primitive.white}",
+          "surfaceRaised": "{color.primitive.white}",
+          "subtle": "{color.primitive.indigo50}",
+          "inverse": "{color.primitive.ink900}",
+          "brand": "{color.primitive.indigo500}",
+          "accent": "{color.primitive.coral50}"
+        },
+        "text": {
+          "primary": "{color.primitive.ink900}",
+          "secondary": "{color.primitive.ink600}",
+          "tertiary": "{color.primitive.ink500}",
+          "inverse": "{color.primitive.white}",
+          "brand": "{color.primitive.indigo600}",
+          "accent": "{color.primitive.coral600}",
+          "success": "{color.primitive.green600}",
+          "warning": "{color.primitive.amber700}",
+          "danger": "{color.primitive.red700}",
+          "disabled": "{color.primitive.ink400}"
+        },
+        "border": {
+          "default": "{color.primitive.ink200}",
+          "strong": "{color.primitive.ink300}",
+          "brand": "{color.primitive.indigo500}",
+          "focus": "{color.primitive.indigo400}",
+          "danger": "{color.primitive.red700}",
+          "inverse": "rgba(255, 255, 255, 0.24)"
+        },
+        "action": {
+          "primaryDefault": "{color.primitive.indigo500}",
+          "primaryHover": "{color.primitive.indigo600}",
+          "primaryPressed": "{color.primitive.indigo700}",
+          "primaryText": "{color.primitive.white}",
+          "secondaryDefault": "{color.primitive.white}",
+          "secondaryHover": "{color.primitive.indigo50}",
+          "secondaryPressed": "{color.primitive.indigo100}",
+          "secondaryText": "{color.primitive.indigo700}",
+          "linkDefault": "{color.primitive.indigo600}",
+          "linkHover": "{color.primitive.indigo800}",
+          "disabledBackground": "{color.primitive.ink100}",
+          "disabledText": "{color.primitive.ink400}"
+        },
+        "status": {
+          "successBackground": "{color.primitive.green50}",
+          "successForeground": "{color.primitive.green600}",
+          "warningBackground": "{color.primitive.amber50}",
+          "warningForeground": "{color.primitive.amber700}",
+          "dangerBackground": "{color.primitive.red50}",
+          "dangerForeground": "{color.primitive.red700}"
+        },
+        "overlay": "rgba(23, 20, 38, 0.56)",
+        "scrim": "rgba(23, 20, 38, 0.08)"
+      }
+    },
+    "typography": {
+      "fontFamily": {
+        "brand": "Manrope, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif",
+        "body": "Manrope, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif",
+        "mono": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace"
+      },
+      "fontWeight": {
+        "regular": 400,
+        "medium": 500,
+        "semibold": 600,
+        "bold": 700,
+        "extrabold": 800
+      },
+      "fontSize": {
+        "xs": "0.75rem",
+        "sm": "0.875rem",
+        "md": "1rem",
+        "lg": "1.125rem",
+        "xl": "1.25rem",
+        "2xl": "1.5rem",
+        "3xl": "2rem",
+        "4xl": "2.5rem",
+        "5xl": "3.5rem",
+        "6xl": "4.5rem"
+      },
+      "lineHeight": {
+        "tight": 1.1,
+        "snug": 1.25,
+        "normal": 1.5,
+        "relaxed": 1.6,
+        "loose": 1.75
+      },
+      "letterSpacing": {
+        "tight": "-0.03em",
+        "normal": "0",
+        "wide": "0.04em"
+      },
+      "styles": {
+        "display": {
+          "fontFamily": "{typography.fontFamily.brand}",
+          "fontSize": "clamp(2.5rem, 6vw, 4.5rem)",
+          "fontWeight": "{typography.fontWeight.extrabold}",
+          "lineHeight": "{typography.lineHeight.tight}",
+          "letterSpacing": "{typography.letterSpacing.tight}"
+        },
+        "h1": {
+          "fontSize": "clamp(2.5rem, 6vw, 4.5rem)",
+          "fontWeight": "{typography.fontWeight.extrabold}",
+          "lineHeight": "{typography.lineHeight.tight}",
+          "letterSpacing": "{typography.letterSpacing.tight}"
+        },
+        "h2": {
+          "fontSize": "clamp(2rem, 4vw, 3.5rem)",
+          "fontWeight": "{typography.fontWeight.bold}",
+          "lineHeight": "{typography.lineHeight.snug}",
+          "letterSpacing": "-0.025em"
+        },
+        "h3": {
+          "fontSize": "clamp(1.25rem, 2vw, 1.5rem)",
+          "fontWeight": "{typography.fontWeight.semibold}",
+          "lineHeight": "{typography.lineHeight.snug}",
+          "letterSpacing": "-0.01em"
+        },
+        "bodyLarge": {
+          "fontSize": "{typography.fontSize.lg}",
+          "fontWeight": "{typography.fontWeight.regular}",
+          "lineHeight": "{typography.lineHeight.relaxed}"
+        },
+        "body": {
+          "fontSize": "{typography.fontSize.md}",
+          "fontWeight": "{typography.fontWeight.regular}",
+          "lineHeight": "{typography.lineHeight.relaxed}"
+        },
+        "bodySmall": {
+          "fontSize": "{typography.fontSize.sm}",
+          "fontWeight": "{typography.fontWeight.regular}",
+          "lineHeight": "{typography.lineHeight.normal}"
+        },
+        "label": {
+          "fontSize": "{typography.fontSize.sm}",
+          "fontWeight": "{typography.fontWeight.semibold}",
+          "lineHeight": "{typography.lineHeight.normal}"
+        },
+        "button": {
+          "fontSize": "{typography.fontSize.md}",
+          "fontWeight": "{typography.fontWeight.semibold}",
+          "lineHeight": 1
+        },
+        "eyebrow": {
+          "fontSize": "{typography.fontSize.sm}",
+          "fontWeight": "{typography.fontWeight.bold}",
+          "lineHeight": "{typography.lineHeight.normal}",
+          "letterSpacing": "{typography.letterSpacing.wide}",
+          "textTransform": "uppercase"
+        }
+      },
+      "contentMeasure": {
+        "prose": "65ch",
+        "narrow": "48ch",
+        "wide": "78ch"
+      }
+    },
+    "spacing": {
+      "0": "0",
+      "half": "0.25rem",
+      "1": "0.5rem",
+      "oneAndHalf": "0.75rem",
+      "2": "1rem",
+      "3": "1.5rem",
+      "4": "2rem",
+      "5": "2.5rem",
+      "6": "3rem",
+      "7": "3.5rem",
+      "8": "4rem",
+      "10": "5rem",
+      "12": "6rem",
+      "15": "7.5rem"
+    },
+    "size": {
+      "controlSmall": "2.25rem",
+      "controlMedium": "2.75rem",
+      "controlLarge": "3.25rem",
+      "touchTargetMin": "2.75rem",
+      "headerMobile": "3.5rem",
+      "headerDesktop": "4rem",
+      "container": "75rem",
+      "containerNarrow": "45rem"
+    },
+    "breakpoint": {
+      "xs": "30rem",
+      "sm": "48rem",
+      "md": "64rem",
+      "lg": "80rem"
+    },
+    "radius": {
+      "none": "0",
+      "sm": "0.5rem",
+      "md": "0.75rem",
+      "lg": "1.25rem",
+      "xl": "1.75rem",
+      "pill": "9999px"
+    },
+    "borderWidth": {
+      "none": "0",
+      "thin": "1px",
+      "strong": "2px",
+      "focus": "3px"
+    },
+    "shadow": {
+      "none": "none",
+      "xs": "0 1px 2px rgba(23, 20, 38, 0.06)",
+      "sm": "0 4px 12px rgba(23, 20, 38, 0.08)",
+      "md": "0 12px 32px rgba(23, 20, 38, 0.10)",
+      "lg": "0 24px 64px rgba(23, 20, 38, 0.14)",
+      "focus": "0 0 0 3px rgba(130, 108, 255, 0.38)"
+    },
+    "zIndex": {
+      "base": 0,
+      "raised": 10,
+      "sticky": 100,
+      "dropdown": 200,
+      "modal": 300,
+      "toast": 400
+    }
+  },
+  "layout": {
+    "grid": {
+      "columnsDesktop": 12,
+      "columnsTablet": 8,
+      "columnsMobile": 4,
+      "gutterMobile": "{spacing.2}",
+      "gutterTablet": "{spacing.3}",
+      "gutterDesktop": "{spacing.4}"
+    },
+    "pagePadding": {
+      "mobile": "{spacing.2}",
+      "tablet": "{spacing.3}",
+      "desktop": "{spacing.4}"
+    },
+    "sectionPaddingBlock": {
+      "mobile": "{spacing.7}",
+      "tablet": "{spacing.10}",
+      "desktop": "{spacing.15}"
+    },
+    "containerMaxWidth": "{size.container}",
+    "proseMaxWidth": "{size.containerNarrow}"
+  },
+  "components": {
+    "button": {
+      "base": {
+        "height": "{size.controlLarge}",
+        "paddingInline": "{spacing.3}",
+        "gap": "{spacing.1}",
+        "radius": "{radius.md}",
+        "typography": "{typography.styles.button}",
+        "transition": "background-color 180ms cubic-bezier(0.2, 0.8, 0.2, 1), border-color 180ms cubic-bezier(0.2, 0.8, 0.2, 1), color 180ms cubic-bezier(0.2, 0.8, 0.2, 1), transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 180ms cubic-bezier(0.2, 0.8, 0.2, 1)"
+      },
+      "primary": {
+        "background": "{color.semantic.action.primaryDefault}",
+        "text": "{color.semantic.action.primaryText}",
+        "border": "{color.semantic.action.primaryDefault}",
+        "hoverBackground": "{color.semantic.action.primaryHover}",
+        "pressedBackground": "{color.semantic.action.primaryPressed}",
+        "hoverTransform": "translateY(-1px)",
+        "shadow": "{shadow.sm}",
+        "hoverShadow": "{shadow.md}"
+      },
+      "secondary": {
+        "background": "{color.semantic.action.secondaryDefault}",
+        "text": "{color.semantic.action.secondaryText}",
+        "border": "{color.semantic.border.strong}",
+        "hoverBackground": "{color.semantic.action.secondaryHover}",
+        "pressedBackground": "{color.semantic.action.secondaryPressed}",
+        "shadow": "{shadow.xs}"
+      },
+      "ghost": {
+        "background": "transparent",
+        "text": "{color.semantic.action.linkDefault}",
+        "border": "transparent",
+        "hoverBackground": "{color.primitive.indigo50}"
+      },
+      "disabled": {
+        "background": "{color.semantic.action.disabledBackground}",
+        "text": "{color.semantic.action.disabledText}",
+        "border": "{color.semantic.action.disabledBackground}",
+        "cursor": "not-allowed"
+      },
+      "focus": {
+        "outlineWidth": "{borderWidth.focus}",
+        "outlineColor": "{color.semantic.border.focus}",
+        "outlineOffset": "2px"
+      }
+    },
+    "link": {
+      "default": "{color.semantic.action.linkDefault}",
+      "hover": "{color.semantic.action.linkHover}",
+      "underlineThickness": "1px",
+      "underlineOffset": "0.2em",
+      "focusRing": "{shadow.focus}"
+    },
+    "input": {
+      "height": "{size.controlLarge}",
+      "background": "{color.semantic.background.surface}",
+      "text": "{color.semantic.text.primary}",
+      "placeholder": "{color.semantic.text.tertiary}",
+      "border": "{color.semantic.border.default}",
+      "borderHover": "{color.semantic.border.strong}",
+      "borderFocus": "{color.semantic.border.brand}",
+      "borderError": "{color.semantic.border.danger}",
+      "borderWidth": "{borderWidth.thin}",
+      "radius": "{radius.md}",
+      "paddingInline": "{spacing.2}",
+      "fontSize": "{typography.fontSize.md}",
+      "focusRing": "{shadow.focus}",
+      "labelGap": "{spacing.half}",
+      "messageGap": "{spacing.half}"
+    },
+    "textarea": {
+      "minHeight": "8rem",
+      "resize": "vertical",
+      "maxLengthIdealCustomer": 300,
+      "maxLengthNotes": 500
+    },
+    "select": {
+      "height": "{size.controlLarge}",
+      "indicatorSize": "1.25rem"
+    },
+    "checkbox": {
+      "size": "1.25rem",
+      "radius": "{radius.sm}",
+      "checkedBackground": "{color.semantic.action.primaryDefault}",
+      "checkedMark": "{color.primitive.white}",
+      "labelGap": "{spacing.1}"
+    },
+    "card": {
+      "background": "{color.semantic.background.surface}",
+      "text": "{color.semantic.text.primary}",
+      "border": "{color.semantic.border.default}",
+      "borderWidth": "{borderWidth.thin}",
+      "radius": "{radius.lg}",
+      "paddingMobile": "{spacing.3}",
+      "paddingDesktop": "{spacing.4}",
+      "shadow": "{shadow.xs}",
+      "hoverShadow": "{shadow.sm}"
+    },
+    "badge": {
+      "height": "1.75rem",
+      "paddingInline": "{spacing.1}",
+      "radius": "{radius.pill}",
+      "background": "{color.primitive.indigo50}",
+      "text": "{color.semantic.text.brand}",
+      "fontSize": "{typography.fontSize.sm}",
+      "fontWeight": "{typography.fontWeight.semibold}"
+    },
+    "header": {
+      "heightMobile": "{size.headerMobile}",
+      "heightDesktop": "{size.headerDesktop}",
+      "backgroundInitial": "transparent",
+      "backgroundSticky": "rgba(255, 255, 255, 0.92)",
+      "backdropFilterSticky": "blur(16px)",
+      "borderSticky": "{color.semantic.border.default}",
+      "stickyAfterPx": 80,
+      "zIndex": "{zIndex.sticky}"
+    },
+    "section": {
+      "paddingBlockMobile": "{layout.sectionPaddingBlock.mobile}",
+      "paddingBlockTablet": "{layout.sectionPaddingBlock.tablet}",
+      "paddingBlockDesktop": "{layout.sectionPaddingBlock.desktop}",
+      "headingGap": "{spacing.2}",
+      "contentGap": "{spacing.5}"
+    },
+    "accordion": {
+      "background": "{color.semantic.background.surface}",
+      "border": "{color.semantic.border.default}",
+      "radius": "{radius.md}",
+      "triggerMinHeight": "{size.controlLarge}",
+      "triggerPadding": "{spacing.2}",
+      "contentPadding": "0 {spacing.2} {spacing.2}"
+    },
+    "form": {
+      "maxWidth": "{size.containerNarrow}",
+      "background": "{color.semantic.background.surface}",
+      "border": "{color.semantic.border.default}",
+      "radius": "{radius.xl}",
+      "paddingMobile": "{spacing.3}",
+      "paddingDesktop": "{spacing.5}",
+      "fieldGap": "{spacing.3}",
+      "groupGap": "{spacing.5}",
+      "shadow": "{shadow.md}"
+    },
+    "statusMessage": {
+      "radius": "{radius.md}",
+      "padding": "{spacing.2}",
+      "successBackground": "{color.semantic.status.successBackground}",
+      "successText": "{color.semantic.status.successForeground}",
+      "errorBackground": "{color.semantic.status.dangerBackground}",
+      "errorText": "{color.semantic.status.dangerForeground}"
+    },
+    "footer": {
+      "background": "{color.semantic.background.inverse}",
+      "text": "{color.semantic.text.inverse}",
+      "secondaryText": "{color.primitive.ink300}",
+      "border": "{color.semantic.border.inverse}",
+      "paddingBlockMobile": "{spacing.5}",
+      "paddingBlockDesktop": "{spacing.8}"
+    },
+    "scrollbar": {
+      "width": "0.75rem",
+      "track": "{color.semantic.background.canvas}",
+      "thumb": "{color.primitive.ink300}",
+      "thumbHover": "{color.primitive.ink400}",
+      "radius": "{radius.pill}",
+      "innerTrackInset": "3px"
+    }
+  },
+  "patterns": {
+    "hero": {
+      "background": "linear-gradient(145deg, #F8F7FC 0%, #F3F1FF 55%, #FFF3F1 100%)",
+      "copyColumnsDesktop": 7,
+      "visualColumnsDesktop": 5,
+      "stackBelow": "{breakpoint.sm}",
+      "minHeightDesktop": "calc(100svh - {size.headerDesktop})",
+      "align": "center",
+      "primaryAction": "filled_primary_button",
+      "secondaryAction": "text_link",
+      "platformMarkSize": "1.25rem",
+      "eyebrow": "Instagram, YouTube and Facebook creator campaigns"
+    },
+    "featureGrid": {
+      "columnsMobile": 1,
+      "columnsTablet": 2,
+      "columnsDesktop": 3,
+      "gap": "{spacing.3}"
+    },
+    "leadForm": {
+      "layout": "single_page_grouped",
+      "groups": [
+        "business",
+        "campaign",
+        "contact"
+      ],
+      "primaryActionLabel": "Send campaign request",
+      "successBehavior": "replace_form_in_place",
+      "preserveValuesOnError": true,
+      "platformField": {
+        "name": "preferredPlatforms",
+        "required": true,
+        "control": "checkbox_group",
+        "options": [
+          "instagram",
+          "youtube",
+          "facebook",
+          "not_sure"
+        ],
+        "notSureIsExclusive": true,
+        "validationMessage": "Select at least one platform or choose “Not sure yet”."
+      }
+    },
+    "matchingCriteriaPanel": {
+      "background": "{color.semantic.background.brand}",
+      "text": "{color.semantic.text.inverse}",
+      "accent": "{color.primitive.coral400}",
+      "radius": "{radius.xl}",
+      "paddingMobile": "{spacing.4}",
+      "paddingDesktop": "{spacing.8}",
+      "heading": "More than follower count.",
+      "criteria": [
+        "category_relevance",
+        "audience_location",
+        "content_quality",
+        "brand_fit",
+        "platform_fit",
+        "campaign_objective"
+      ],
+      "icon": "scan-search"
+    }
+  },
+  "pages": {
+    "landing": {
+      "background": "{color.semantic.background.canvas}",
+      "header": "sticky_on_scroll",
+      "primaryCtaLabel": "Tell us about your campaign",
+      "primaryCtaTarget": "#campaign-request",
+      "sections": [
+        {
+          "id": "hero",
+          "variant": "hero",
+          "tone": "gradient",
+          "purpose": "explain_value_and_supported_platforms"
+        },
+        {
+          "id": "platforms",
+          "variant": "platform_cards_and_use_cases",
+          "tone": "surface",
+          "purpose": "establish_platform_and_campaign_fit"
+        },
+        {
+          "id": "how-it-works",
+          "variant": "three_step_cards",
+          "tone": "canvas",
+          "purpose": "reduce_process_anxiety"
+        },
+        {
+          "id": "why-collaba",
+          "variant": "feature_grid",
+          "tone": "subtle",
+          "purpose": "differentiate_service"
+        },
+        {
+          "id": "matching-criteria",
+          "variant": "matching_criteria_panel",
+          "tone": "brand",
+          "purpose": "explain_creator_matching_criteria"
+        },
+        {
+          "id": "campaign-request",
+          "variant": "lead_form",
+          "tone": "canvas",
+          "purpose": "capture_qualified_campaign_request"
+        },
+        {
+          "id": "faq",
+          "variant": "accordion",
+          "tone": "surface",
+          "purpose": "resolve_final_objections"
+        }
+      ]
+    }
+  },
+  "motion": {
+    "principle": "Motion explains state and progression; it never delays access or competes with content.",
+    "duration": {
+      "instant": "0ms",
+      "fast": "120ms",
+      "normal": "180ms",
+      "slow": "280ms",
+      "reveal": "420ms"
+    },
+    "easing": {
+      "standard": "cubic-bezier(0.2, 0.8, 0.2, 1)",
+      "enter": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "exit": "cubic-bezier(0.4, 0, 1, 1)"
+    },
+    "sectionReveal": {
+      "opacityFrom": 0,
+      "opacityTo": 1,
+      "translateYFrom": "0.75rem",
+      "translateYTo": "0",
+      "duration": "{motion.duration.reveal}",
+      "easing": "{motion.easing.enter}",
+      "once": true,
+      "maxSiblingStagger": 3,
+      "staggerDelay": "60ms"
+    },
+    "reducedMotion": {
+      "mediaQuery": "(prefers-reduced-motion: reduce)",
+      "disable": [
+        "smooth_scroll",
+        "section_reveal",
+        "decorative_path_animation",
+        "hover_transform"
+      ],
+      "durationOverride": "0.01ms"
+    }
+  },
+  "scroll": {
+    "behavior": "native",
+    "anchorBehavior": "smooth_unless_reduced_motion",
+    "scrollSnap": "none",
+    "parallax": "none",
+    "horizontalPageScroll": "forbidden",
+    "sectionReveal": "once_on_intersection",
+    "intersectionThreshold": 0.18,
+    "anchorOffset": "calc({size.headerDesktop} + {spacing.2})",
+    "progressIndicator": "none"
+  },
+  "iconography": {
+    "functionalLibrary": "Lucide",
+    "functionalStyle": "rounded_outline",
+    "strokeWidthPx": 1.75,
+    "lineCap": "round",
+    "lineJoin": "round",
+    "sizes": {
+      "sm": "1rem",
+      "action": "1.125rem",
+      "md": "1.25rem",
+      "lg": "1.5rem",
+      "feature": "2rem"
+    },
+    "approvedFunctionalIcons": {
+      "primaryCta": "arrow-right",
+      "submitRequest": "send",
+      "campaignGoal": "target",
+      "creatorMatching": "users-round",
+      "outcomeReview": "chart-no-axes-combined",
+      "relevanceEvaluation": "scan-search",
+      "humanReview": "badge-check",
+      "outcomeFocus": "chart-line",
+      "faqDisclosure": "chevron-down"
+    },
+    "platformMarks": {
+      "exceptionToFunctionalStyle": true,
+      "sourcePriority": [
+        "official SVG mark",
+        "Simple Icons equivalent"
+      ],
+      "renderMode": "monochrome_currentColor",
+      "heroSize": "1.25rem",
+      "cardSize": "1.5rem",
+      "assets": {
+        "instagram": "/icons/platform/instagram.svg",
+        "youtube": "/icons/platform/youtube.svg",
+        "facebook": "/icons/platform/facebook.svg"
+      }
+    },
+    "rules": [
+      "Use Lucide only for functional and feature icons.",
+      "Treat official platform marks as the only exception to the rounded outline style.",
+      "Keep a visible platform name beside or below every platform mark.",
+      "Render non-interactive platform marks with aria-hidden=true and focusable=false.",
+      "Do not use emoji as interface icons.",
+      "Do not add leading icons to text fields.",
+      "Do not animate, redraw, crop, or combine platform marks with the Collaba logo.",
+      "Do not imply endorsement or partnership with a platform.",
+      "Critical actions retain visible text labels.",
+      "Icon-only controls require an accessible name and a 44px target."
+    ]
+  },
+  "imagery": {
+    "direction": "real, permissioned campaign content or abstract business-to-creator-to-audience connection diagrams",
+    "aspectRatios": {
+      "hero": "4:3",
+      "card": "3:2",
+      "avatar": "1:1"
+    },
+    "treatment": {
+      "radius": "{radius.lg}",
+      "border": "{color.semantic.border.default}",
+      "saturation": "natural",
+      "overlay": "none"
+    },
+    "avoid": [
+      "generic megaphones",
+      "unlicensed creator screenshots",
+      "floating emoji clouds",
+      "fake analytics dashboards",
+      "fabricated testimonials or logos"
+    ]
+  },
+  "accessibility": {
+    "contrast": {
+      "normalTextMinimum": "4.5:1",
+      "largeTextMinimum": "3:1",
+      "uiComponentMinimum": "3:1"
+    },
+    "focus": {
+      "visible": true,
+      "width": "{borderWidth.focus}",
+      "color": "{color.semantic.border.focus}",
+      "offset": "2px"
+    },
+    "touchTargetMinimum": "{size.touchTargetMin}",
+    "inputFontSizeMinimumPx": 16,
+    "bodyFontSizeMinimumPx": 16,
+    "zoomSupportPercent": 200,
+    "requirements": [
+      "one_h1_per_page",
+      "semantic_landmarks",
+      "ordered_headings",
+      "persistent_input_labels",
+      "errors_linked_with_aria_describedby",
+      "status_updates_use_aria_live",
+      "no_color_only_meaning",
+      "keyboard_operable",
+      "reduced_motion_supported",
+      "decorative_images_have_empty_alt"
+    ]
+  },
+  "analytics": {
+    "primaryConversionEvent": "lead_form_submit",
+    "events": [
+      "primary_cta_click",
+      "section_view",
+      "lead_form_start",
+      "platform_selection_change",
+      "lead_form_error",
+      "lead_form_submit",
+      "faq_open",
+      "outbound_contact_click"
+    ],
+    "piiPolicy": "Never send names, email addresses, phone numbers, URLs containing personal identifiers, or free-text form values to analytics.",
+    "submissionRule": "Emit lead_form_submit only after the server confirms that the lead was stored.",
+    "platformMixPolicy": "Use an alphabetically sorted controlled value such as facebook_instagram, instagram_youtube, or not_sure. Never send open-text or profile URLs.",
+    "internalStatuses": [
+      "new",
+      "contacted",
+      "qualified",
+      "consultation_booked",
+      "campaign_started",
+      "closed"
+    ]
+  },
+  "qualityGates": {
+    "lighthouseMobile": {
+      "performanceMinimum": 90,
+      "accessibilityMinimum": 95,
+      "bestPracticesMinimum": 95,
+      "seoMinimum": 90
+    },
+    "interaction": {
+      "minimumTouchTargetPx": 44,
+      "layoutShiftTarget": 0.1,
+      "maxSectionRevealDistancePx": 12
+    },
+    "content": {
+      "maxPrimaryActionsPerView": 1,
+      "maxBodyMeasureCharacters": 65,
+      "fabricatedEvidenceAllowed": false,
+      "introductoryPriceClaimsAllowed": false,
+      "requiredPlatformTerms": [
+        "Instagram",
+        "YouTube",
+        "Facebook"
+      ],
+      "platformEndorsementClaimsAllowed": false,
+      "requiredPrimaryCtaLabel": "Tell us about your campaign",
+      "requiredFormCtaLabel": "Send campaign request",
+      "prohibitedLegacyIds": [
+        "free-pilot",
+        "pilot-request"
+      ]
+    }
+  }
+}

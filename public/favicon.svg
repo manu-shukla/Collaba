@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="8" fill="#171426" />
+  <!-- Same 24-unit mark as src/components/Logo.tsx, scaled to sit inside the tile.
+       The connector is stroked heavier here than in the lockup (2.4 vs 1.55): at a
+       16px tab favicon the lockup's weight renders under one device pixel and the
+       two nodes read as unconnected dots. Optical sizing, not a drift — if the
+       lockup geometry changes, change both. -->
+  <g transform="translate(3.25 3.25) scale(1.064)">
+    <path d="M6.15 8V10.55Q6.15 12.25 7.85 12.25H17.42Q19.26 12.25 19.26 14.09V16.3"
+      fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" />
+    <circle cx="4.5" cy="5.4" r="3.8" fill="#FFFFFF" />
+    <circle cx="19.8" cy="18.9" r="3.45" fill="#FF6B5F" />
+  </g>
+</svg>

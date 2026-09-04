@@ -1,0 +1,24 @@
+{
+  "name": "Collaba.in — Relevant influencer collaborations",
+  "short_name": "Collaba.in",
+  "description": "Collaba.in matches growing businesses with right-fit Instagram, YouTube, and Facebook creators and coordinates the collaboration from brief to outcome review.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f7f6fa",
+  "theme_color": "#5b45f5",
+  "lang": "en-IN",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
