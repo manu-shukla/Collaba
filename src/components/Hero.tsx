@@ -156,17 +156,20 @@ export function Hero() {
           {/* Set by the owner, and it diverges from the exact H1 in
               product-design.md §B — update that document to match, or the code
               stays out of contract with its own spec. The indigo falls on the
-              trust clause, which is the load-bearing idea. */}
+              fit clause, which is the load-bearing idea. */}
           <h1 className="h1">
-            Reach your target audience through the creators{' '}
-            <span className="text-brand">they trust most.</span>
+            Grow Your Business with the{' '}
+            <span className="text-brand">Right Creators</span>
           </h1>
 
-          {/* No price or zero-cost claim here: product-design.md §1.2 keeps
-              pricing off the V2 landing page entirely. */}
+          {/* Owner-set copy. Note the budget/"best deals" mention diverges from
+              product-design.md §1.2, which keeps pricing off the V2 landing
+              page — reconcile that document, or the code stays out of contract
+              with its own spec. Still no price or zero-cost claim. */}
           <p className="lede">
-            Collaba.in finds right-fit Instagram, YouTube, and Facebook creators for your business
-            and helps run the collaboration from brief to outcome review.
+            Stop wasting hours searching Instagram for creators who don&rsquo;t fit your audience,
+            location, or budget. Tell us about your business. We&rsquo;ll help you find relevant
+            creators and the best deals.
           </p>
 
           <div className="platform-row">
