@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { track } from '../lib/firebase'
 
 /**
+ * Version 1 of the CTA click tracking, which is a simple GA4 event with two parameters:
  * Where on the page a CTA lives, keyed by the element it sits inside. The value
  * is what shows up in GA4, so it is written for whoever reads the report rather
  * than for whoever wrote the markup.
