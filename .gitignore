@@ -13,3 +13,25 @@ firestore-debug.log
 ui-debug.log
 firebase-debug.log
 .firebase
+
+# TypeScript incremental build cache
+*.tsbuildinfo
+
+# IDE
+.idea
+.vscode
+*.swp
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / misc
+Thumbs.db
+
+# Test / coverage output
+coverage
+*.lcov
