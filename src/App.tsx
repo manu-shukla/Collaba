@@ -1,6 +1,9 @@
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
-import { HowItWorks, Platforms, RelevanceStrip, WhyCollaba } from './components/Sections'
+// RelevanceStrip (the "Built for" band under the hero) is intentionally not
+// rendered for now. The component is kept in src/components/Sections.tsx — add it
+// back to this import and to the tree below to bring the band back.
+import { HowItWorks, Platforms, WhyCollaba } from './components/Sections'
 // OfferPanel ("First pilot free") is intentionally not rendered for now.
 // The component is kept in src/components/OfferPanel.tsx — re-add the import and
 // <OfferPanel /> below to bring the section back.
@@ -26,10 +29,10 @@ export default function App() {
       <Header />
       <main id="main">
         <Hero />
-        <RelevanceStrip />
+        {/* <RelevanceStrip /> */}
         <Platforms />
-        <HowItWorks />
         <WhyCollaba />
+        <HowItWorks />
         {/* <OfferPanel /> */}
         <LeadForm />
         <Faq />

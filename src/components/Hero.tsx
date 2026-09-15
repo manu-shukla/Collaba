@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { m, useReducedMotion, useScroll, useTransform } from 'motion/react'
 import type { MotionValue } from 'motion/react'
-import { IconArrowRight, IconChat, IconClock, IconShield, IconStore } from './Icons'
+import { IconArrowRight, IconShield, IconStore } from './Icons'
 import { IconInstagram, IconYouTube, PLATFORMS } from './PlatformIcons'
 import { SectionScene, TapLink } from './Motion'
 
@@ -196,13 +196,7 @@ export function Hero() {
 
           <ul className="hero__trust">
             <li>
-              <IconClock /> Takes about 2 minutes
-            </li>
-            <li>
-              <IconChat /> We reply personally
-            </li>
-            <li>
-              <IconShield /> No payment details
+              <IconShield /> No payment details needed
             </li>
           </ul>
         </div>

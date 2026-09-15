@@ -104,6 +104,32 @@ export const IconShield = ({ size = 16, className }: IconProps) => (
   </svg>
 )
 
+/** Shield with a tick inside — "verified", where plain IconShield reads as "protected". */
+export const IconShieldCheck = ({ size = 20, className }: IconProps) => (
+  <svg {...base(size)} className={className}>
+    <path d="M12 3.5l7 2.5v5.5c0 4-3 7.2-7 9-4-1.8-7-5-7-9V6l7-2.5Z" />
+    <path d="m9 11.8 2.2 2.2L15.2 10" />
+  </svg>
+)
+
+/**
+ * Rupee, for the budget card. Drawn as strokes rather than set as a "₹" text
+ * glyph so it inherits the 1.75px weight of the set instead of the body font's.
+ */
+export const IconRupee = ({ size = 20, className }: IconProps) => (
+  <svg {...base(size)} className={className}>
+    <path d="M7.5 4.5h9M7.5 8.5h9" />
+    <path d="M13.5 4.5c0 2.7-2 4.9-4.7 4.9" />
+    <path d="M7.5 12.5h3.2l4.8 7" />
+  </svg>
+)
+
+export const IconBolt = ({ size = 20, className }: IconProps) => (
+  <svg {...base(size)} className={className}>
+    <path d="M13.5 3 6 13.5h4.5L10 21l7.5-10.5H13L13.5 3Z" />
+  </svg>
+)
+
 export const IconStore = ({ size = 18, className }: IconProps) => (
   <svg {...base(size)} className={className}>
     <path d="M4 9.5V19h16V9.5" />

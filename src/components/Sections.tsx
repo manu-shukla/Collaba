@@ -1,15 +1,19 @@
 import { useRef } from 'react'
 import { m, useReducedMotion, useScroll, useSpring } from 'motion/react'
 import { Reveal, RevealGroup, SectionScene } from './Motion'
-import { IconChart, IconEye, IconTarget } from './Icons'
+import { IconBolt, IconRupee, IconShieldCheck, IconTarget } from './Icons'
 import { PLATFORMS } from './PlatformIcons'
 
+// Concrete outcomes a local business would recognise, in the register the rest of
+// the page uses. The previous five mixed vocabularies: "local discovery" and
+// "qualified leads" were marketing terms, and "product trials" rarely applies to
+// a shop or a café.
 const useCases = [
-  'launches',
-  'local discovery',
-  'store visits',
-  'qualified leads',
-  'product trials',
+  'store launches',
+  'more walk-ins',
+  'new product launches',
+  'festive offers',
+  'online orders',
 ]
 
 export function RelevanceStrip() {
@@ -31,15 +35,18 @@ export function Platforms() {
   return (
     <section className="section section--surface" id="platforms">
       <SectionScene className="container">
-        <Reveal className="section__head section__head--center">
-          <p className="eyebrow" style={{ justifyContent: 'center' }}>
+        {/* Left-aligned, like the two sections below it. The centring — and the
+            two inline styles that centring needed, on the eyebrow and the lede —
+            is gone. */}
+        <Reveal className="section__head">
+          <p className="eyebrow">
             <span className="eyebrow__dot" aria-hidden="true" />
             Where we work
           </p>
           <h2 className="h2" style={{ marginTop: 'var(--sp-1)' }}>
             Instagram, YouTube, and Facebook creators.
           </h2>
-          <p className="lede" style={{ marginTop: 'var(--sp-2)', marginInline: 'auto' }}>
+          <p className="lede" style={{ marginTop: 'var(--sp-2)' }}>
             These are the three platforms we match on today. We pick the platform that suits your
             goal — not all three by default.
           </p>
@@ -70,18 +77,23 @@ export function Platforms() {
   )
 }
 
+// Written to be understood on one read, which is not the same as written short.
+// Each title says who does the thing, and each body says what actually happens
+// and what the reader gets — in plain words, with no terms the reader would have
+// to work out ("audience context", "practical fit", "outcome summary" were all
+// doing that job badly).
 const steps = [
   {
-    title: 'Tell us the outcome you want.',
-    body: 'Share your business, audience, location, and campaign goal.',
+    title: 'You tell us what you need',
+    body: 'Tell us about your business, the customers you want to reach, your city and your budget.',
   },
   {
-    title: 'We find the right-fit creators.',
-    body: 'We review relevance, content quality, audience context, and practical fit — not follower count alone.',
+    title: 'We find creators who fit',
+    body: 'Collaba will find creators on Instagram, YouTube and Facebook whose followers match your customers.',
   },
   {
-    title: 'Launch with a clear plan.',
-    body: 'You approve the direction, we coordinate the pilot, and you receive a concise outcome summary.',
+    title: 'You choose, and we run it',
+    body: 'You get a shortlist with the reason for each pick. Choose who you like, and we handle the rest.',
   },
 ]
 
@@ -103,12 +115,27 @@ export function HowItWorks() {
   })
 
   return (
-    <section className="section" id="how-it-works">
+    // --surface so this alternates with WhyCollaba above it and the lead form
+    // below, both of which sit on the canvas. It was the canvas itself until
+    // WhyCollaba moved ahead of it, at which point it and the lead form were two
+    // canvas bands with no seam between them.
+    <section className="section section--surface" id="how-it-works">
       <SectionScene className="container">
+        {/* Eyebrow added because this was the only section head on the page
+            without one, which also frees the heading from having to label itself.
+            The lede states who does the work, since that is the thing a reader
+            most often gets wrong about this section. */}
         <Reveal className="section__head">
-          <h2 className="h2">Three steps, and we handle the coordination.</h2>
+          <p className="eyebrow">
+            <span className="eyebrow__dot" aria-hidden="true" />
+            How it works
+          </p>
+          <h2 className="h2" style={{ marginTop: 'var(--sp-1)' }}>
+            Just 3 simple steps.
+          </h2>
           <p className="lede" style={{ marginTop: 'var(--sp-2)' }}>
-            You stay in control of the direction. We do the sourcing, briefing, and follow-through.
+            You describe your business once. We do the searching and negotiating, and you decide who
+            to work with.
           </p>
         </Reveal>
 
@@ -148,47 +175,63 @@ export function HowItWorks() {
 const benefits = [
   {
     icon: IconTarget,
-    title: 'Relevance before reach',
-    // Was a six-item list that ended on "your campaign goal" — a thing the lead
-    // form no longer asks for. Three grouped criteria carry the same meaning.
-    body: 'We match on category, on audience location and age, and on how a creator actually sounds — not on follower count.',
+    title: 'Relevant Creators',
+    body: 'Matched to your niche, location and audience',
   },
   {
-    icon: IconEye,
-    title: 'Human-reviewed matches',
-    body: 'A person on our team reviews every creator we recommend, and can explain the reasoning behind each one.',
+    icon: IconRupee,
+    title: 'Better Deals',
+    body: 'Get the right value for your budget',
   },
   {
-    icon: IconChart,
-    title: 'Built around an outcome',
-    body: 'We agree the business goal and the numbers we will report on before anything is published.',
+    icon: IconBolt,
+    title: 'Less Effort',
+    body: 'We do the heavy lifting for you',
+  },
+  {
+    icon: IconShieldCheck,
+    title: 'More Confidence',
+    body: 'Insights beyond just follower count',
   },
 ]
 
 export function WhyCollaba() {
   return (
-    <section className="section section--subtle" id="why-collaba">
+    // Keeps the #why-collaba id: the header and footer nav both link to it, and
+    // the section still answers the same question under a different headline.
+    // Plain .section (the canvas), not --subtle: --subtle is indigo-50 and this
+    // was the only section on the page wearing it. Sitting between the white
+    // Platforms above and the white HowItWorks below, the canvas is what keeps
+    // the page alternating.
+    <section className="section" id="why-collaba">
       <SectionScene className="container">
-        <Reveal className="section__head">
+        {/* Left-aligned like HowItWorks, heading block on top and content below.
+            Deliberately not the hero's two-column split, and deliberately no
+            CTA — those two things together made this read as a second hero. */}
+        <Reveal className="section__head solution__head">
           <p className="eyebrow">
             <span className="eyebrow__dot" aria-hidden="true" />
-            Why Collaba
+            Why Collaba?
           </p>
+          {/* The break before the payoff is the only one set by hand — the two
+              "The Right …" clauses share a line, the outcome gets its own. That
+              first line fits the container at the standard .h2 scale from 48rem
+              up, so no font-size override is needed here. No highlight colour on
+              the payoff either: the hero already spends the one indigo phrase
+              this page gets. */}
           <h2 className="h2" style={{ marginTop: 'var(--sp-1)' }}>
-            Relevance first, then reach.
+            The Right Creator. The Right Audience.
+            <br />
+            Real Business Growth.
           </h2>
-          {/* Deliberately keeps the specifics out: this states the idea, and the
-              first card below is where the matching criteria are named. The earlier
-              version listed city, age and category here and the card then listed
-              six criteria three lines later — the same point twice, and the reader
-              met a list before they met the reason for it. */}
           <p className="lede" style={{ marginTop: 'var(--sp-2)' }}>
-            A big follower count is not proof of a right-fit audience. Checking who actually watches
-            is slow work from the outside, so we do it for you.
+            Collaba helps you discover and collaborate with relevant creators based on niche,
+            audience, location and budget, so you can focus on what matters most: growing your
+            business.
           </p>
         </Reveal>
 
-        <RevealGroup className="features">
+        <RevealGroup className="solution__cards">
           {benefits.map((benefit) => {
             const Icon = benefit.icon
             return (
@@ -202,13 +245,6 @@ export function WhyCollaba() {
             )
           })}
         </RevealGroup>
-
-        <Reveal className="note">
-          <p>
-            We are building Collaba with our first businesses, so your feedback directly shapes the
-            service.
-          </p>
-        </Reveal>
       </SectionScene>
     </section>
   )

@@ -1157,6 +1157,42 @@ textarea {
   border-top: var(--bw-thin) solid var(--border-default);
 }
 
+/* ============================================================
+   Solution cards (#why-collaba)
+   .features with a fourth column: the cards themselves are plain .card, so they
+   match the platform cards exactly. Kept separate only because .features tops
+   out at three columns, which would orphan the fourth card on its own row.
+   ============================================================ */
+
+/* Uncapped, unlike the shared .section__head: this heading's first line is
+   ~890px at the desktop .h2 size, and 65ch of measure (~620px) would wrap it
+   again regardless of the hand-set break. The .lede below carries its own
+   --measure-prose, so lifting the cap here only affects the h2. */
+.solution__head {
+  max-width: none;
+}
+
+.solution__cards {
+  display: grid;
+  gap: var(--sp-3);
+}
+
+@media (min-width: 48rem) {
+  .solution__cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 72rem rather than the 64rem the rest of the page steps at: four columns at
+   1024px leaves each card ~205px wide, which wraps "Relevant Creators" onto a
+   second line while its three neighbours stay on one. Two-up until there is
+   room for four. */
+@media (min-width: 72rem) {
+  .solution__cards {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 .note {
   display: flex;
   gap: var(--sp-1-5);
