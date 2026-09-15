@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { ChangeEvent, ComponentProps, FocusEvent, FormEvent } from 'react'
 import { Reveal, SectionScene, TapButton } from './Motion'
-import { IconAlert, IconCheck, IconCheckCircle } from './Icons'
+import { IconAlert, IconCheckCircle } from './Icons'
 import { PLATFORMS } from './PlatformIcons'
 import { track } from '../lib/firebase'
 
@@ -155,12 +155,6 @@ function submitErrorMessage(code: string | null) {
     default:
       return 'We could not send your request just now. Your answers are still here — please try again.'
   }
-}
-
-function maskEmail(email: string) {
-  const [user = '', domain = ''] = email.split('@')
-  const head = user.slice(0, 2)
-  return `${head}${'•'.repeat(Math.max(user.length - 2, 2))}@${domain}`
 }
 
 export function LeadForm() {
@@ -411,18 +405,6 @@ export function LeadForm() {
     if (!node) return
     node.scrollIntoView({ block: 'center', behavior: scrollBehavior() })
     node.focus({ preventScroll: true })
-  }
-
-  const resetForm = () => {
-    setValues(initialValues)
-    setErrors({})
-    setTouched({})
-    setSubmitted(null)
-    setSubmitError(null)
-    setStatus('idle')
-    startedRef.current = false
-    focusedFieldsRef.current.clear()
-    blurredFieldsRef.current.clear()
   }
 
   const errorList = REQUIRED_FIELDS.filter((field) => errors[field]).map((field) => ({
