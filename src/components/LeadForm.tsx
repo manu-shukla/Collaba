@@ -185,6 +185,55 @@ export function LeadForm() {
    */
   const attemptRef = useRef(0)
 
+  /**
+   * Tracks which fields have already fired `field_focus` and `field_blur` events
+   * so each fires at most once per field per session. Keeps GA4 event volume low
+   * and avoids inflated counts from users tabbing back and forth.
+   */
+  const focusedFieldsRef = useRef<Set<keyof FormValues>>(new Set())
+  const blurredFieldsRef = useRef<Set<keyof FormValues>>(new Set())
+
+  /** GA4-friendly field name: snake_case version of the camelCase form key. */
+  const fieldAnalyticsName = (field: keyof FormValues): string => {
+    const map: Record<keyof FormValues, string> = {
+      businessName: 'business_name',
+      preferredPlatforms: 'preferred_platforms',
+      fullName: 'full_name',
+      email: 'email',
+      mobile: 'mobile',
+      consent: 'consent',
+    }
+    return map[field]
+  }
+
+  /** Whether a field currently holds a meaningful value. */
+  const fieldHasValue = (field: keyof FormValues, vals: FormValues): boolean => {
+    const v = vals[field]
+    if (Array.isArray(v)) return v.length > 0
+    if (typeof v === 'boolean') return v
+    return String(v).trim().length > 0
+  }
+
+  const trackFieldFocus = (field: keyof FormValues) => {
+    if (focusedFieldsRef.current.has(field)) return
+    focusedFieldsRef.current.add(field)
+    track('field_focus', {
+      form_id: 'pilot_request',
+      field_name: fieldAnalyticsName(field),
+    })
+  }
+
+  const trackFieldBlur = (field: keyof FormValues, vals: FormValues) => {
+    if (blurredFieldsRef.current.has(field)) return
+    blurredFieldsRef.current.add(field)
+    track('field_blur', {
+      form_id: 'pilot_request',
+      field_name: fieldAnalyticsName(field),
+      has_value: fieldHasValue(field, vals),
+      is_valid: !validateField(field, vals),
+    })
+  }
+
   const markStarted = (field: keyof FormValues) => {
     if (startedRef.current) return
     startedRef.current = true
@@ -235,8 +284,14 @@ export function LeadForm() {
     }
   }
 
+  const handleFocus = (event: FocusEvent<HTMLInputElement>) => {
+    const name = event.target.name as keyof FormValues
+    trackFieldFocus(name)
+  }
+
   const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
     const name = event.target.name as keyof FormValues
+    trackFieldBlur(name, values)
     setTouched((prev) => ({ ...prev, [name]: true }))
     setErrors((prev) => ({ ...prev, [name]: validateField(name, values) }))
   }
@@ -263,6 +318,11 @@ export function LeadForm() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
+    track('form_submit', {
+      form_id: 'pilot_request',
+      attempt_number: attemptRef.current + 1,
+    })
 
     const nextErrors: Errors = {}
     REQUIRED_FIELDS.forEach((field) => {
@@ -361,6 +421,8 @@ export function LeadForm() {
     setSubmitError(null)
     setStatus('idle')
     startedRef.current = false
+    focusedFieldsRef.current.clear()
+    blurredFieldsRef.current.clear()
   }
 
   const errorList = REQUIRED_FIELDS.filter((field) => errors[field]).map((field) => ({
@@ -390,30 +452,10 @@ export function LeadForm() {
               </span>
               <h3 className="h3">You&apos;re in — thanks, {submitted.firstName}.</h3>
               <p>
-                We&apos;ll review your request and reply within one business day. A copy has been
-                sent to{' '}
+                We&apos;ll review your request and reply within one business day.
                 {/* The mask is one unbreakable token (ma••••••••@yourbusiness.com) and
                     pushed the card wider than a 320px screen without this. */}
-                <span className="breakable">{maskEmail(submitted.email)}</span>.
               </p>
-
-              <ul className="success__next">
-                <li>
-                  <IconCheck /> We read your brief and check creator-audience fit in your category.
-                </li>
-                <li>
-                  <IconCheck /> You get a short reply with a suggested pilot direction.
-                </li>
-                <li>
-                  <IconCheck /> Nothing starts until you approve the scope in writing.
-                </li>
-              </ul>
-
-              <div className="success__actions">
-                <button type="button" className="link-quiet" onClick={resetForm}>
-                  Submit another business
-                </button>
-              </div>
             </div>
           ) : (
             <form onSubmit={handleSubmit} noValidate>
@@ -475,6 +517,7 @@ export function LeadForm() {
                   value={values.businessName}
                   error={showError('businessName')}
                   onChange={handleChange}
+                  onFocus={handleFocus}
                   onBlur={handleBlur}
                   placeholder="e.g. Kettle & Co."
                   autoComplete="organization"
@@ -489,6 +532,21 @@ export function LeadForm() {
                       ? 'preferredPlatforms-error'
                       : 'preferredPlatforms-hint'
                   }
+                  onFocusCapture={(e) => {
+                    // Fire field_focus when focus enters the group from outside.
+                    // relatedTarget is the element that just lost focus — if it is
+                    // inside the same fieldset, focus is just moving between
+                    // checkboxes and this is not a new interaction.
+                    const fieldset = e.currentTarget
+                    if (e.relatedTarget instanceof Node && fieldset.contains(e.relatedTarget)) return
+                    trackFieldFocus('preferredPlatforms')
+                  }}
+                  onBlurCapture={(e) => {
+                    // Fire field_blur when focus leaves the group entirely.
+                    const fieldset = e.currentTarget
+                    if (e.relatedTarget instanceof Node && fieldset.contains(e.relatedTarget)) return
+                    trackFieldBlur('preferredPlatforms', values)
+                  }}
                 >
                   <legend className="field__label">
                     Preferred platforms{' '}
@@ -539,6 +597,7 @@ export function LeadForm() {
                   value={values.fullName}
                   error={showError('fullName')}
                   onChange={handleChange}
+                  onFocus={handleFocus}
                   onBlur={handleBlur}
                   autoComplete="name"
                   autoCapitalize="words"
@@ -558,6 +617,7 @@ export function LeadForm() {
                     value={values.email}
                     error={showError('email')}
                     onChange={handleChange}
+                    onFocus={handleFocus}
                     onBlur={handleBlur}
                     autoComplete="email"
                     placeholder="you@yourbusiness.com"
@@ -575,6 +635,7 @@ export function LeadForm() {
                     value={values.mobile}
                     error={showError('mobile')}
                     onChange={handleChange}
+                    onFocus={handleFocus}
                     onBlur={handleBlur}
                     autoComplete="tel"
                     placeholder="98765 43210"
@@ -601,7 +662,11 @@ export function LeadForm() {
                   type="checkbox"
                   checked={values.consent}
                   onChange={handleChange}
-                  onBlur={handleBlur}
+                  onFocus={() => trackFieldFocus('consent')}
+                  onBlur={(e) => {
+                    trackFieldBlur('consent', values)
+                    handleBlur(e)
+                  }}
                   aria-describedby={showError('consent') ? 'consent-error' : undefined}
                 />
                 <label htmlFor="consent">
@@ -709,6 +774,7 @@ function Field({
   placeholder,
   value,
   onChange,
+  onFocus,
   onBlur,
   type = 'text',
   autoComplete,
@@ -720,6 +786,7 @@ function Field({
 }: CommonFieldProps & {
   value: string
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
+  onFocus?: (e: FocusEvent<HTMLInputElement>) => void
   onBlur: (e: FocusEvent<HTMLInputElement>) => void
   type?: string
   autoComplete?: string
@@ -741,6 +808,7 @@ function Field({
         type={type}
         value={value}
         onChange={onChange}
+        onFocus={onFocus}
         onBlur={onBlur}
         placeholder={placeholder}
         autoComplete={autoComplete}
