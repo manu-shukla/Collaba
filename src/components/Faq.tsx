@@ -3,17 +3,12 @@ import { Reveal, SectionScene } from './Motion'
 import { IconPlus } from './Icons'
 
 const faqs = [
-  {
-    id: 'whats-free',
-    question: 'What exactly is free in the first pilot?',
-    answer:
-      'Matching, briefing, coordination, and your outcome summary are free for the first agreed pilot. Anything with a real cost attached — creator compensation, product samples, travel, or paid media — is confirmed with you in writing before the pilot starts, and nothing runs until you approve it.',
-  },
+
   {
     id: 'which-platforms',
     question: 'Which platforms do you work with?',
     answer:
-      'Instagram, YouTube, and Facebook. Within those we work across Reels, Stories and posts, YouTube videos, Shorts, reviews and integrations, and Facebook video and community-led local discovery. If your audience sits mainly on another platform, tell us in the form — we will say plainly whether we can help yet rather than take the request and improvise. We are an independent service and are not affiliated with any of these platforms.',
+      "Instagram, YouTube, and Facebook. Within those we work across Reels, Stories and posts, YouTube videos, Shorts, reviews and integrations, and Facebook video and community-led local discovery. You name it, and we are on all popular social media platforms.",
   },
   {
     id: 'choose-creators',
@@ -44,7 +39,7 @@ export function Faq() {
           fade-out. See the note on SectionScene's `fadeOut`. */}
       <SectionScene className="container" fadeOut={false}>
         <Reveal className="section__head section__head--center">
-          <h2 className="h2">Before you send the form</h2>
+          <h2 className="h2">Frequently asked questions</h2>
         </Reveal>
 
         <div className="faq">
