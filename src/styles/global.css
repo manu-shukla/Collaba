@@ -722,155 +722,297 @@ textarea {
   }
 }
 
-/* Hero connection diagram
-   Queried as a container, not against the viewport: this card is ~280px wide
-   both on a phone AND in the 5fr hero column between 768px and 1024px, so a
-   viewport media query would style the wrong cases.
+/* Hero reel showcase
+   The product demo beside the hero copy: a phone frame whose feed advances one
+   reel at a time. See ReelShowcase.tsx.
 
-   The 23rem (368px) threshold below is where the side-by-side creator node
-   genuinely has more room for its label than the stacked one. Below it a
-   creator label gets (C - 62)/2 - 74 px next to its avatar, which at 352px is
-   71px — too narrow for "Reels · Stories" on one line. Stacked, the same node
-   gives it (C - 42)/2 - 18. Crossover is ~368px. */
-.diagram {
-  container-type: inline-size;
+   Sized from its height, not its width. A tall handset frame filling the 5fr hero
+   track is ~470px wide at 1440px, which is a 990px-tall phone — taller than the copy
+   beside it and taller than a 900px viewport's whole content area. Pinning the height
+   and letting aspect-ratio derive the width keeps it inside the hero at every size, so
+   there is no width-based media query here at all.
+
+   Everything inside the screen is positioned in cqw/cqh rather than rem, so the whole
+   mockup scales as one object between the clamp's ends instead of the chrome drifting
+   out of proportion with the frame. */
+.showcase {
+  display: grid;
+  justify-items: center;
+  gap: var(--sp-1-5);
+}
+
+/* The rim: the metal edge of the device. 9/19 rather than 9/16 — a 16:9 phone stopped
+   looking like a current handset years ago, and the extra height is what the camera
+   cutout and home indicator need to sit in without crowding the caption. */
+.showcase__phone {
   position: relative;
   display: grid;
-  gap: var(--sp-2);
-  padding: var(--sp-2);
-  background: var(--diagram-surface);
-  border: var(--bw-thin) solid var(--border-default);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-md);
+  block-size: clamp(25rem, 56vh, 33rem);
+  aspect-ratio: 9 / 19;
+  padding: 0.2rem;
+  border-radius: 2.25rem;
+  /* Off-axis gradient so the rim catches light down one edge — a flat fill read as a
+     drawn rectangle rather than as metal. */
+  background: linear-gradient(150deg, var(--ink-500), var(--ink-900) 42%, var(--ink-700));
+  box-shadow: var(--shadow-lg);
 }
 
-@container (min-width: 23rem) {
-  .diagram {
-    padding: var(--sp-3);
-  }
-}
-
-.diagram__row {
+/* The black bezel between rim and screen. A border on the screen would have given
+   both boxes the same corner radius; nested boxes let the radius step down, which is
+   what actually sells the frame's edge. */
+.showcase__bezel {
   display: grid;
-  gap: var(--sp-1-5);
+  padding: 0.28rem;
+  border-radius: 2.1rem;
+  background: var(--ink-900);
 }
 
-/* Stays two columns at every width — the side-by-side pair *is* the diagram's
-   meaning. The nodes restack internally instead (see .node--creator below). */
-.diagram__row--pair {
-  grid-template-columns: 1fr 1fr;
-  gap: var(--sp-1);
+/* Side keys, on the rim rather than inside it. */
+.showcase__key {
+  position: absolute;
+  inline-size: 0.14rem;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--ink-700), var(--ink-400));
 }
 
-@container (min-width: 23rem) {
-  .diagram__row--pair {
-    gap: var(--sp-1-5);
-  }
+.showcase__key--silence {
+  inset-inline-start: -0.08rem;
+  inset-block-start: 15%;
+  block-size: 4%;
 }
 
-.node {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-1-5);
-  padding: var(--sp-1-5);
-  background: var(--bg-surface);
-  border: var(--bw-thin) solid var(--border-default);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-xs);
+.showcase__key--volup {
+  inset-inline-start: -0.08rem;
+  inset-block-start: 23%;
+  block-size: 7%;
 }
 
-/* In a narrow card the two creator nodes have ~110px each, which is not enough
-   for an avatar and a label side by side — stack them instead of truncating. */
-.node--creator {
-  flex-direction: column;
-  align-items: center;
-  gap: var(--sp-1);
-  padding: var(--sp-1);
-  text-align: center;
+.showcase__key--voldown {
+  inset-inline-start: -0.08rem;
+  inset-block-start: 32%;
+  block-size: 7%;
 }
 
-@container (min-width: 23rem) {
-  .node--creator {
-    flex-direction: row;
-    align-items: center;
-    gap: var(--sp-1-5);
-    padding: var(--sp-1-5);
-    text-align: left;
-  }
+.showcase__key--power {
+  inset-inline-end: -0.08rem;
+  inset-block-start: 26%;
+  block-size: 10%;
 }
 
-.node--business {
-  border-color: var(--indigo-200);
-  background: linear-gradient(180deg, var(--white), var(--indigo-50));
+/* container-type: size, not the inline-size used elsewhere on this page: the reels
+   below are measured in cqh, which makes each one exactly one screen tall with no
+   pixel measurement and no ResizeObserver. Legal here because the parent's
+   aspect-ratio plus the grid stretch give this box a definite height as well as a
+   definite width. */
+.showcase__screen {
+  container-type: size;
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.9rem;
+  background: var(--ink-900);
 }
 
-.node__avatar {
+/* Camera cutout. Sized as a share of the screen, so it stays proportional across the
+   clamp range instead of ballooning on the small end. */
+.showcase__island {
+  position: absolute;
+  inset-block-start: 1.4cqh;
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  inline-size: 31cqw;
+  block-size: 4cqh;
+  border-radius: var(--radius-pill);
+  background: var(--ink-900);
+}
+
+.showcase__home {
+  position: absolute;
+  inset-block-end: 1cqh;
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  inline-size: 34cqw;
+  block-size: 0.55cqh;
+  min-block-size: 3px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+/* Height is 2N screens — the reel list is deliberately rendered twice so the loop
+   can snap back to the top invisibly. Motion animates `y` as a percentage of this
+   box, which is why one reel's step is 100/2N% and not 100%. */
+.showcase__track {
+  display: block;
+  will-change: transform;
+}
+
+/* Reduced motion: nothing animates, so the frame has to read as a feed while
+   standing still. Shortening the first reel rather than translating the track up is
+   what makes that work — a translate of any useful size clipped the platform badge
+   in the reel's top corner, while shortening lets the badge and caption stay whole
+   (both are positioned against the reel, so the caption rides up with it) and puts
+   the peek of the next reel at the bottom, where a feed's next item belongs. */
+.showcase__track--static > .showcase__reel:first-child {
+  block-size: 92cqh;
+}
+
+/* The peeking reel shows poster only. Its badge sits in the sliver that is visible
+   and got cut in half, which read as a stray circle rather than as the next reel. */
+.showcase__track--static > .showcase__reel:not(:first-child) .showcase__badge {
+  display: none;
+}
+
+.showcase__reel {
+  position: relative;
   display: grid;
   place-items: center;
-  flex: 0 0 auto;
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: var(--radius-md);
-  background: var(--indigo-100);
-  color: var(--indigo-700);
+  block-size: 100cqh;
+  overflow: hidden;
 }
 
-.node--creator .node__avatar {
-  background: var(--coral-100);
-  color: var(--coral-700);
-  border-radius: var(--radius-pill);
+/* Top-left sheen, for depth on the coded posters. Stays a pseudo-element because it
+   belongs under any real footage — the scrim is the one that has to sit on top, and
+   that is .showcase__scrim. */
+.showcase__reel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(58% 38% at 26% 16%, rgba(255, 255, 255, 0.3), transparent 72%);
 }
 
-/* Brand marks carry their own colour, so the tinted plate would fight them. */
-.node--creator .node__avatar--platform {
-  background: var(--bg-surface);
-  border: var(--bw-thin) solid var(--border-default);
+/* Darkens the lower half so the white caption, scrubber and home indicator stay
+   legible over anything — a pale coded tint or a bright clip. */
+.showcase__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(23, 20, 38, 0.72) 0%, rgba(23, 20, 38, 0.15) 34%, transparent 52%);
 }
 
-/* Grid, not the default inline span — as inline boxes the title and meta
-   collapsed onto one line ("Your businessGoal · audience · city"). */
-.node__label {
+.showcase__reel--indigo {
+  background: linear-gradient(165deg, var(--indigo-400), var(--indigo-700));
+}
+
+.showcase__reel--coral {
+  background: linear-gradient(165deg, var(--coral-300), var(--coral-600));
+}
+
+.showcase__reel--ink {
+  background: linear-gradient(165deg, var(--ink-500), var(--ink-900));
+}
+
+/* Stand-in for real footage: the category glyph, large and knocked back. Sized in
+   cqw so it keeps the same proportion of the screen at every frame size. */
+.showcase__glyph {
+  position: relative;
   display: grid;
-  min-width: 0;
+  place-items: center;
+  color: var(--white);
+  opacity: 0.4;
 }
 
-.node__title {
+.showcase__glyph svg {
+  inline-size: 44cqw;
+  block-size: auto;
+}
+
+.showcase__video {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+/* Sits below the camera cutout's line rather than beside it — level with the cutout
+   the two read as one confused row of chrome. */
+.showcase__badge {
+  position: absolute;
+  inset-block-start: 6.5cqh;
+  inset-inline-start: 4cqw;
+  display: grid;
+  place-items: center;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  border-radius: var(--radius-pill);
+  /* Near-opaque plate: the brand marks carry their own colours and lose legibility
+     straight on a saturated poster. The shadow is not decoration — over pale footage
+     a white plate on white has no edge at all without it. */
+  background: var(--bg-surface-veil);
+  box-shadow: 0 1px 4px rgba(23, 20, 38, 0.35);
+}
+
+.showcase__rail {
+  position: absolute;
+  inset-block-end: 13cqh;
+  inset-inline-end: 3cqw;
+  display: grid;
+  gap: var(--sp-1);
+  color: var(--white);
+  /* Holds the icon strokes apart from whatever is behind the plate. */
+  filter: drop-shadow(0 1px 2px rgba(23, 20, 38, 0.45));
+}
+
+/* Affordances with no numbers beside them, on purpose — a like or view count here
+   would be a fabricated metric (product-design.md §1.2).
+
+   Dark plate under white icons, not the lighter-white plate this started with: the
+   rail sits high enough that the scrim has barely begun, so on pale footage a white
+   icon on a white plate on white video disappeared entirely. */
+.showcase__railBtn {
+  display: grid;
+  place-items: center;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  border-radius: var(--radius-pill);
+  background: rgba(23, 20, 38, 0.3);
+}
+
+/* Clears the scrubber and the home indicator stacked below it. */
+.showcase__meta {
+  position: absolute;
+  inset-block-end: 6.6cqh;
+  inset-inline: 4cqw;
+  display: grid;
+  gap: var(--sp-quarter);
+  color: var(--white);
+}
+
+.showcase__category {
   font-size: var(--fs-sm);
   font-weight: 700;
   line-height: var(--lh-snug);
-  /* Deliberately wraps rather than truncating: "Instagram creator" losing its
-     second word is worse than taking two lines. */
-  overflow-wrap: break-word;
 }
 
-.node__meta {
+.showcase__city {
+  font-size: var(--fs-xs);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Fills over one reel's dwell, so the feed's next move is never a surprise.
+   transform-origin only — Motion writes the scaleX inline. */
+.showcase__progress {
+  position: absolute;
+  inset-inline: 4cqw;
+  /* Above the home indicator, not at the screen's edge: at the edge the rounded
+     corners clipped both of its ends into stubs. */
+  inset-block-end: 4cqh;
+  block-size: 2px;
+  border-radius: var(--radius-pill);
+  transform-origin: left center;
+  background: var(--white);
+  opacity: 0.85;
+}
+
+.showcase__caption {
+  max-inline-size: 30ch;
   font-size: var(--fs-xs);
   color: var(--text-tertiary);
-  line-height: var(--lh-normal);
-  overflow-wrap: break-word;
+  text-align: center;
 }
 
-/* aspect-ratio instead of a fixed height + preserveAspectRatio="none": the
-   non-uniform scale that produced was warping the stroke weight and pulling the
-   curve endpoints away from the node columns. */
-.diagram__connector {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 240 / 40;
-  color: var(--indigo-300);
-}
-
-.diagram__path {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.75;
-  stroke-linecap: round;
-  /* No dash animation here: Framer Motion animates pathLength on these paths and
-     sets stroke-dasharray/dashoffset inline. A CSS animation on the same
-     properties would win over inline styles and fight it. */
-}
-
+/* Chips
+   Lives here for historical reasons — it arrived with the hero diagram the reel
+   showcase replaced. Not hero-only any more: Sections.tsx uses .chips/.chip for the
+   platform-card format lists, which is the only remaining caller. */
 .chips {
   display: flex;
   flex-wrap: wrap;
@@ -896,12 +1038,6 @@ textarea {
   background: var(--coral-50);
   border-color: var(--coral-100);
   color: var(--text-accent);
-}
-
-.diagram__caption {
-  font-size: var(--fs-xs);
-  color: var(--text-tertiary);
-  text-align: center;
 }
 
 /* ============================================================

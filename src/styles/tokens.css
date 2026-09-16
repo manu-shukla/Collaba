@@ -51,7 +51,6 @@
   /* Translucent surfaces that sit on the hero gradient. */
   --bg-surface-translucent: rgba(255, 255, 255, 0.72);
   --bg-surface-veil: rgba(255, 255, 255, 0.92);
-  --diagram-surface: var(--bg-surface-translucent);
 
   --text-primary: var(--ink-900);
   --text-secondary: var(--ink-600);

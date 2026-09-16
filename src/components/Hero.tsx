@@ -1,128 +1,9 @@
 import { useRef } from 'react'
-import { m, useReducedMotion, useScroll, useTransform } from 'motion/react'
-import type { MotionValue } from 'motion/react'
-import { IconArrowRight, IconShield, IconStore } from './Icons'
-import { IconInstagram, IconYouTube, PLATFORMS } from './PlatformIcons'
+import { useScroll, useTransform } from 'motion/react'
+import { IconArrowRight, IconShield } from './Icons'
+import { PLATFORMS } from './PlatformIcons'
 import { SectionScene, TapLink } from './Motion'
-
-/** Seconds between each connector starting to draw. */
-const DRAW_STEP = 0.14
-
-/**
- * One connector curve, drawn on by animating `pathLength` from 0 to 1.
- *
- * Framer normalises `pathLength` against the curve's real length, so the same
- * 0→1 range works for both directions of curve without measuring either.
- */
-function Connector({ d, order }: { d: string; order: number }) {
-  const reduced = useReducedMotion()
-
-  if (reduced) return <path className="diagram__path" pathLength="1" d={d} />
-
-  return (
-    <m.path
-      className="diagram__path"
-      pathLength="1"
-      d={d}
-      initial={{ pathLength: 0, opacity: 0 }}
-      animate={{ pathLength: 1, opacity: 1 }}
-      transition={{
-        pathLength: { duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: order * DRAW_STEP },
-        opacity: { duration: 0.2, delay: order * DRAW_STEP },
-      }}
-    />
-  )
-}
-
-type DiagramProps = {
-  y: MotionValue<number>
-  opacity: MotionValue<number>
-}
-
-/** Abstract business → creators → audience-interest diagram. No fabricated metrics. */
-function ConnectionDiagram({ y, opacity }: DiagramProps) {
-  const reduced = useReducedMotion()
-
-  return (
-    // Stays the direct grid child of .hero__grid — wrapping it in a positioning
-    // div would take it out of the 7fr/5fr track it belongs to. The transform
-    // does not affect layout, so .diagram's inline-size container queries still
-    // resolve against its real width.
-    <m.figure
-      className="diagram"
-      aria-labelledby="diagram-caption"
-      style={reduced ? undefined : { y, opacity }}
-    >
-      <div className="diagram__row">
-        <div className="node node--business">
-          <span className="node__avatar">
-            <IconStore />
-          </span>
-          <span className="node__label">
-            <span className="node__title">Your business</span>
-            <span className="node__meta">Goal · audience · city</span>
-          </span>
-        </div>
-      </div>
-
-      {/* Endpoints sit at 25%/75% of the viewBox — the centres of the two
-          creator columns below. */}
-      <svg
-        className="diagram__connector"
-        viewBox="0 0 240 40"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <Connector d="M120 0C120 20 60 20 60 40" order={0} />
-        <Connector d="M120 0C120 20 180 20 180 40" order={1} />
-      </svg>
-
-      <div className="diagram__row diagram__row--pair">
-        <div className="node node--creator">
-          <span className="node__avatar node__avatar--platform">
-            <IconInstagram size={18} />
-          </span>
-          <span className="node__label">
-            <span className="node__title">Instagram creator</span>
-            <span className="node__meta">Reels · Stories</span>
-          </span>
-        </div>
-        <div className="node node--creator">
-          <span className="node__avatar node__avatar--platform">
-            <IconYouTube size={18} />
-          </span>
-          <span className="node__label">
-            <span className="node__title">YouTube creator</span>
-            <span className="node__meta">Shorts · reviews</span>
-          </span>
-        </div>
-      </div>
-
-      <svg
-        className="diagram__connector"
-        viewBox="0 0 240 40"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <Connector d="M60 0C60 20 120 20 120 40" order={2} />
-        <Connector d="M180 0C180 20 120 20 120 40" order={3} />
-      </svg>
-
-      <ul className="chips">
-        <li className="chip">Audience intent</li>
-        <li className="chip">Local relevance</li>
-        <li className="chip chip--accent">Content style</li>
-        <li className="chip">Category fit</li>
-        <li className="chip chip--accent">Campaign goal</li>
-      </ul>
-
-      <figcaption className="diagram__caption" id="diagram-caption">
-        How a match is shaped: your goal, relevant creators, then the audience interests they
-        genuinely reach.
-      </figcaption>
-    </m.figure>
-  )
-}
+import { ReelShowcase } from './ReelShowcase'
 
 export function Hero() {
   const heroRef = useRef<HTMLElement | null>(null)
@@ -135,17 +16,17 @@ export function Hero() {
     offset: ['start start', 'end start'],
   })
 
-  // Small enough to read as depth rather than as the diagram detaching from the
+  // Small enough to read as depth rather than as the showcase detaching from the
   // copy beside it.
-  const diagramY = useTransform(scrollYProgress, [0, 1], [0, -56])
+  const showcaseY = useTransform(scrollYProgress, [0, 1], [0, -56])
   // Held at full strength through the first half: fading something still
   // squarely in view looks like a rendering fault, not an effect.
-  const diagramOpacity = useTransform(scrollYProgress, [0, 0.55, 1], [1, 1, 0.5])
+  const showcaseOpacity = useTransform(scrollYProgress, [0, 0.55, 1], [1, 1, 0.5])
 
   return (
     <section className="hero" id="top" ref={heroRef}>
-      {/* The diagram keeps its own, larger parallax on top of the scene's — the
-          differential between copy and diagram is what reads as depth. */}
+      {/* The showcase keeps its own, larger parallax on top of the scene's — the
+          differential between copy and showcase is what reads as depth. */}
       <SectionScene className="container hero__grid">
         <div className="hero__copy">
           <p className="eyebrow">
@@ -201,7 +82,7 @@ export function Hero() {
           </ul>
         </div>
 
-        <ConnectionDiagram y={diagramY} opacity={diagramOpacity} />
+        <ReelShowcase y={showcaseY} opacity={showcaseOpacity} />
       </SectionScene>
     </section>
   )

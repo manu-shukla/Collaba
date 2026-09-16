@@ -171,3 +171,57 @@ export const IconSpark = ({ size = 18, className }: IconProps) => (
     <path d="M18.5 16.5 19 18l1.5.5-1.5.5-.5 1.5-.5-1.5L16.5 19l1.5-.5Z" />
   </svg>
 )
+
+/**
+ * Category glyphs for the hero reel showcase (see ReelShowcase.tsx).
+ *
+ * Drawn at the same 1.75px stroke as the rest of the set even though they are
+ * rendered very large and semi-transparent there — a heavier weight for that one
+ * use would have made them a second icon system to maintain, and at 40% opacity
+ * on a tinted poster the thin stroke reads fine.
+ */
+
+export const IconCoffee = ({ size = 20, className }: IconProps) => (
+  <svg {...base(size)} className={className}>
+    <path d="M4 8h12v6a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8Z" />
+    <path d="M16 9.5h1.5a2.5 2.5 0 0 1 0 5H16" />
+    <path d="M6 4.5v1.5M10 3.5v2.5M14 4.5v1.5" />
+  </svg>
+)
+
+export const IconSkincare = ({ size = 20, className }: IconProps) => (
+  <svg {...base(size)} className={className}>
+    <path d="M9 3.5h4v3h-4z" />
+    <path d="M7.5 6.5h7A2.5 2.5 0 0 1 17 9v9a2.5 2.5 0 0 1-2.5 2.5h-5A2.5 2.5 0 0 1 7 18V9a2.5 2.5 0 0 1 .5-2.5Z" />
+    <path d="M7 12.5h10" />
+  </svg>
+)
+
+export const IconDumbbell = ({ size = 20, className }: IconProps) => (
+  <svg {...base(size)} className={className}>
+    <path d="M3 9.5v5M6 7.5v9M18 7.5v9M21 9.5v5" />
+    <path d="M6 12h12" />
+  </svg>
+)
+
+export const IconHome = ({ size = 20, className }: IconProps) => (
+  <svg {...base(size)} className={className}>
+    <path d="M4 10.5 12 4l8 6.5V20H4v-9.5Z" />
+    <path d="M9.5 20v-5.5h5V20" />
+  </svg>
+)
+
+export const IconShirt = ({ size = 20, className }: IconProps) => (
+  <svg {...base(size)} className={className}>
+    <path d="M9 4 5 6.5 3.5 11l3 1V20h11v-8l3-1L19 6.5 15 4" />
+    <path d="M9 4a3 3 0 0 0 6 0" />
+  </svg>
+)
+
+/** Outline paper-plane, matching the platform-native "send" affordance. */
+export const IconShare = ({ size = 16, className }: IconProps) => (
+  <svg {...base(size)} className={className}>
+    <path d="M21 3 10.5 13.5" />
+    <path d="M21 3l-7 18-3.5-7.5L3 10 21 3Z" />
+  </svg>
+)
