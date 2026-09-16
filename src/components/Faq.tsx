@@ -26,7 +26,7 @@ const faqs = [
     id: 'after-submit',
     question: 'What happens after I submit?',
     answer:
-      'We read your request, check whether we can genuinely help, and reply personally within one business day. If it looks like a fit, we suggest a pilot direction and set up a short discovery call. If it is not a fit yet, we will tell you that plainly instead of stringing it along.',
+      'Once you submit the form, we will personally review your request and reach out to you for the next step!',
   },
 ]
 

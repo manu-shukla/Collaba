@@ -260,7 +260,7 @@ function Frame({
 }
 
 const CAPTION =
-  'Illustrative examples of the kind of short-form creator content we help you commission.'
+  ''
 
 type ReelShowcaseProps = {
   y: MotionValue<number>
