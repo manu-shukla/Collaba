@@ -17,8 +17,12 @@ import { IconFacebook, IconInstagram, IconYouTube } from './PlatformIcons'
 const DWELL_MS = 1900
 /** Duration of the swipe itself — short enough to read as a flick, not a scroll. */
 const SWIPE_S = 0.52
-/** How much of a clip one visit to a reel consumes: the dwell plus the swipe into it. */
-const VISIBLE_S = DWELL_MS / 1000 + SWIPE_S
+/**
+ * How much of a clip is ever displayed: the swipe in, plus the dwell. Because a clip always
+ * restarts when its reel comes around (see ReelMedia), nothing past this point is ever
+ * seen — which is why scripts/prepare-reels.sh only has to produce about three seconds.
+ */
+export const DISPLAYED_S = SWIPE_S + DWELL_MS / 1000
 
 type Glyph = (props: { size?: number; className?: string }) => JSX.Element
 
@@ -119,15 +123,17 @@ function ReelMedia({
       return
     }
 
-    // A reel is on screen for one dwell, and pausing rather than resetting means the
-    // clip resumes where it left off — which is good (a visitor sees a different part
-    // of it each pass) right up until the part it resumes into is shorter than a dwell.
-    // Then the loop point lands on screen as a hard cut mid-view. Restarting instead is
-    // free: four other reels pass before this one returns, so nobody registers having
-    // seen the opening twice.
-    if (video.duration && video.currentTime + VISIBLE_S > video.duration) {
-      video.currentTime = 0
-    }
+    // Always from the top, never resumed from where it paused.
+    //
+    // Resuming was the first design: a reel is only on screen for one dwell, so letting
+    // the clip carry on meant a visitor saw a different part of it on each pass. That
+    // reads as variety with abstract footage and as breakage with real footage. Every
+    // clip here is a small narrative — a hand enters, places a glass, withdraws — so
+    // pass two would open mid-gesture, pass three would jump backwards to the start, and
+    // the reel looked like it had a cut spliced into it. Restarting costs nothing: four
+    // other reels go by in between, so nobody registers seeing the same two seconds
+    // again, and it makes every pass identical and predictable.
+    video.currentTime = 0
 
     // play() can still be refused even for a muted video — an iPhone in Low Power
     // Mode does exactly that. Swallowing the rejection leaves the poster on screen,
@@ -347,15 +353,28 @@ export function ReelShowcase({ y, opacity }: ReelShowcaseProps) {
             }
           }}
         >
-          {/* Exactly one slide is `active`, and it is the one the track is parked on —
-              not every copy of that reel. Matching on the index rather than on the
-              reel id is what stops a clip and its duplicate decoding at the same time. */}
+          {/*
+            Exactly one slide plays, and only ever a slide from the first copy of the list.
+            The duplicates exist purely to make the loop's wrap invisible, and a duplicate
+            must NOT play: it is a different <video> element from the original, so it would
+            reach a different currentTime, and the snap that is meant to be pixel-identical
+            would instead jump the footage backwards. That was the "cut" in the middle of
+            the first reel — the duplicate played its opening half-second, then the snap
+            handed over to the original starting from zero again.
+
+            Held at its first frame instead, the duplicate matches the original exactly at
+            the moment of the snap, so the wrap stays invisible and playback starts once.
+            The cost is that the reel is a still frame for the ~0.5s swipe that reveals it,
+            which is far cheaper than a visible jump.
+          */}
           {SLIDES.map((reel, slide) => (
             <Slide
               key={`${reel.id}-${slide}`}
               reel={reel}
-              active={inView && slide === index}
-              upcoming={inView && slide === index + 1}
+              active={inView && slide === index && slide < REELS.length}
+              // The first slide is what the snap lands on, so warm it while the duplicate
+              // is being swiped in.
+              upcoming={inView && (slide === index + 1 || (index === REELS.length && slide === 0))}
             />
           ))}
         </m.div>

@@ -39,9 +39,11 @@ OUT_DIR="$REPO_ROOT/src/assets/reels"
 # for more than ~700px. 1080p is roughly double the bytes for pixels nobody sees.
 OUT_W=${OUT_W:-720}
 OUT_H=${OUT_H:-1280}
-# Each reel is only on screen ~1.9s before the feed advances, so anything past a few
-# seconds is never watched.
-DURATION=${DURATION:-5}
+# A reel is on screen for the swipe in plus one dwell — about 2.4s — and ReelShowcase.tsx
+# restarts the clip every time the reel comes around, so nothing past that is ever
+# displayed. Three seconds is that window plus margin; five was paying for two and a half
+# seconds of footage no visitor could ever see.
+DURATION=${DURATION:-3}
 # The size/quality dial. Higher is smaller and worse; 30 lands most footage under the
 # 400 KB target at this resolution.
 CRF=${CRF:-30}
@@ -136,17 +138,15 @@ luma_at() {
   echo "${byte:-255}"
 }
 
-# The furthest into a clip playback ever actually reaches. A reel is on screen for one
-# dwell (1.9s) plus the swipe into it, and it resumes rather than restarting, so it gets a
-# second pass before ReelShowcase.tsx rewinds it to avoid the loop point: 1.9 + 0.52 + 1.9,
-# rounded up. Frames past this are never displayed, so only this range has to look good.
-DISPLAY_MAX=${DISPLAY_MAX:-4.4}
+# The furthest into a clip playback ever actually reaches: the swipe in (0.52s) plus one
+# dwell (1.9s), rounded up. Clips always restart when their reel comes around, so frames
+# past this are never displayed and only this range has to look good.
+DISPLAY_MAX=${DISPLAY_MAX:-2.6}
 # How far back the window may slide to get a fade-out off the end of that range.
 TAIL_SHIFT_MAX=${TAIL_SHIFT_MAX:-1.4}
-# Floor for a shortened clip. One pass is a dwell plus the swipe into it, so anything at or
-# above this still fills the reel completely every time it comes around; the only thing lost
-# is the second pass showing a different part of the clip.
-MIN_DURATION=${MIN_DURATION:-2.6}
+# Floor for a shortened clip: one full pass, so the reel is never left with a frozen last
+# frame while it is still on screen.
+MIN_DURATION=${MIN_DURATION:-2.5}
 
 # Walks $2 forward until the frame there is not a fade-through-black. Echoes the start to
 # actually use.
