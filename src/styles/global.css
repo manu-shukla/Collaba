@@ -741,6 +741,22 @@ textarea {
   gap: var(--sp-1-5);
 }
 
+/* Perspective wrapper for the 3D mouse-tracking tilt. perspective() goes here
+   rather than on the phone itself so the vanishing point sits at the wrapper's
+   centre — on the phone it would travel with the transform. The generous value
+   keeps the distortion subtle: the phone reads as a physical card being turned,
+   not as a pinball flipper.
+
+   display:grid + justify-items:center mirrors the parent .showcase's own layout
+   so the phone stays centred. transform-style: preserve-3d lets the phone's
+   rotateX/rotateY compose correctly inside this perspective space. */
+.showcase__tilt {
+  display: grid;
+  justify-items: center;
+  perspective: 900px;
+  transform-style: preserve-3d;
+}
+
 /* The rim: the metal edge of the device. 9/19 rather than 9/16 — a 16:9 phone stopped
    looking like a current handset years ago, and the extra height is what the camera
    cutout and home indicator need to sit in without crowding the caption. */
@@ -755,6 +771,28 @@ textarea {
      drawn rectangle rather than as metal. */
   background: linear-gradient(150deg, var(--ink-500), var(--ink-900) 42%, var(--ink-700));
   box-shadow: var(--shadow-lg);
+  /* Smooth transform origin for the 3D tilt. */
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* A glare overlay that adds depth to the 3D tilt — as the phone rotates under
+   the cursor, the highlight stays fixed in screen space, so the phone reads as
+   catching real light. Sits on the phone, not the screen, so it covers the bezel
+   edge and the rim together. */
+.showcase__phone::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.04) 40%,
+    transparent 65%
+  );
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* The black bezel between rim and screen. A border on the screen would have given
@@ -1291,6 +1329,208 @@ textarea {
   margin-top: var(--sp-2);
   padding-top: var(--sp-2);
   border-top: var(--bw-thin) solid var(--border-default);
+}
+
+/* Reveal wrapper — transparent so animation effects show through */
+.platform-card-wrapper {
+  display: flex;          /* stretch to grid row height */
+}
+
+/* ============================================================
+   Animated platform cards — refined motion effects
+   ============================================================ */
+
+/* Outer frame: positioned for glow, shimmer, and dots */
+.anim-card {
+  position: relative;
+  isolation: isolate;
+  border-radius: var(--radius-lg);
+  padding: 2px;
+  overflow: hidden;       /* shimmer stays within bounds */
+  display: flex;
+  flex-direction: column;
+  flex: 1;                /* fill equal-height row */
+}
+
+/* Strip .card chrome from the outer wrapper when combined */
+.anim-card.card {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  padding: 2px;
+}
+
+/* ---- Rotating gradient border glow ---- */
+
+.anim-card__glow {
+  position: absolute;
+  inset: -1px;
+  border-radius: calc(var(--radius-lg) + 1px);
+  background: conic-gradient(
+    from var(--glow-angle, 0deg),
+    var(--glow-1),
+    var(--glow-2),
+    var(--glow-3),
+    var(--glow-1)
+  );
+  opacity: 0.22;
+  z-index: 0;
+  animation: anim-glow-spin 8s linear infinite;
+  filter: blur(6px);
+  transition: opacity 0.3s var(--ease-standard), filter 0.3s var(--ease-standard);
+}
+
+@property --glow-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes anim-glow-spin {
+  to { --glow-angle: 360deg; }
+}
+
+/* ---- Diagonal shimmer sweep ---- */
+
+.anim-card__shimmer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: var(--radius-lg);
+  pointer-events: none;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(255, 255, 255, 0.08) 45%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.08) 55%,
+    transparent 60%,
+    transparent 100%
+  );
+  background-size: 250% 100%;
+  animation: anim-shimmer 6s ease-in-out infinite;
+}
+
+@keyframes anim-shimmer {
+  0%, 100% { background-position: 200% 0; }
+  50%      { background-position: -50% 0; }
+}
+
+/* ---- Floating geometric dots ---- */
+
+.anim-card__dot {
+  position: absolute;
+  z-index: 3;
+  width: var(--dot-size, 4px);
+  height: var(--dot-size, 4px);
+  border-radius: 50%;
+  background: var(--dot-color, var(--indigo-400));
+  left: var(--dot-x, 50%);
+  bottom: -4px;
+  opacity: 0;
+  pointer-events: none;
+  animation: anim-dot-rise var(--dot-duration, 8s) ease-in-out infinite;
+  animation-delay: var(--dot-delay, 0s);
+  will-change: transform, opacity;
+}
+
+@keyframes anim-dot-rise {
+  0%   { opacity: 0;    transform: translateY(0)     scale(0.6); }
+  12%  { opacity: 0.35; transform: translateY(-16px)  scale(0.9); }
+  40%  { opacity: 0.25; transform: translateY(-50px)  scale(1);   }
+  70%  { opacity: 0.15; transform: translateY(-90px)  scale(0.8); }
+  100% { opacity: 0;    transform: translateY(-120px) scale(0.5); }
+}
+
+/* ---- Card body — opaque surface above glow ---- */
+
+.anim-card__body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  flex: 1;                /* stretch inside the anim-card */
+  background: var(--bg-surface);
+  border: var(--bw-thin) solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-3);
+  box-shadow: var(--shadow-xs);
+  transition:
+    box-shadow 0.3s var(--ease-standard),
+    border-color 0.3s var(--ease-standard),
+    transform 0.3s var(--ease-standard);
+}
+
+/* ---- Pulse on platform icon ---- */
+
+.anim-card .platform-card__mark {
+  animation: anim-mark-pulse 3s ease-in-out infinite;
+}
+
+@keyframes anim-mark-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(91, 69, 245, 0.12); }
+  50%      { box-shadow: 0 0 0 6px rgba(91, 69, 245, 0);   }
+}
+
+/* Push the format list to the bottom so cards with fewer formats
+   still fill the same height. */
+.anim-card .platform-card__formats {
+  margin-top: auto;
+  padding-top: var(--sp-2);
+  border-top: var(--bw-thin) solid var(--border-default);
+}
+
+/* ---- Hover ---- */
+
+@media (hover: hover) {
+  .anim-card:hover .anim-card__glow {
+    opacity: 0.40;
+    filter: blur(10px);
+  }
+
+  .anim-card:hover .anim-card__body {
+    box-shadow: var(--shadow-sm);
+    border-color: var(--border-strong);
+    transform: translateY(-2px);
+  }
+}
+
+/* ---- Reduced motion ---- */
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-card__glow,
+  .anim-card__shimmer,
+  .anim-card__dot,
+  .anim-card .platform-card__mark {
+    animation: none;
+  }
+
+  .anim-card__dot {
+    display: none;
+  }
+
+  .anim-card__shimmer {
+    display: none;
+  }
+
+  .anim-card__glow {
+    opacity: 0.15;
+  }
+}
+
+/* ---- Mobile refinements ---- */
+
+@media (max-width: 47.99rem) {
+  .anim-card__dot {
+    width: calc(var(--dot-size, 4px) * 0.75);
+    height: calc(var(--dot-size, 4px) * 0.75);
+  }
+
+  .anim-card__glow {
+    opacity: 0.18;
+    filter: blur(4px);
+  }
 }
 
 /* ============================================================

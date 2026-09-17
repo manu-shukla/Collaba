@@ -3,6 +3,7 @@ import { m, useReducedMotion, useScroll, useSpring } from 'motion/react'
 import { Reveal, RevealGroup, SectionScene } from './Motion'
 import { IconBolt, IconRupee, IconShieldCheck, IconTarget } from './Icons'
 import { PLATFORMS } from './PlatformIcons'
+import { PlatformCardAnimated } from './PlatformCardAnimated'
 
 // Concrete outcomes a local business would recognise, in the register the rest of
 // the page uses. The previous five mixed vocabularies: "local discovery" and
@@ -56,19 +57,21 @@ export function Platforms() {
             gesture instead of three cards each reacting to their own edge. */}
         <RevealGroup className="features">
           {PLATFORMS.map(({ id, label, Icon, formats, strength }) => (
-            <Reveal key={id} className="card platform-card">
-              <span className="platform-card__mark">
-                <Icon size={26} />
-              </span>
-              <h3 className="h3">{label}</h3>
-              <p>{strength}</p>
-              <ul className="chips platform-card__formats">
-                {formats.map((format) => (
-                  <li className="chip" key={format}>
-                    {format}
-                  </li>
-                ))}
-              </ul>
+            <Reveal key={id} className="platform-card-wrapper">
+              <PlatformCardAnimated platformId={id} className="card platform-card">
+                <span className="platform-card__mark">
+                  <Icon size={26} />
+                </span>
+                <h3 className="h3">{label}</h3>
+                <p>{strength}</p>
+                <ul className="chips platform-card__formats">
+                  {formats.map((format) => (
+                    <li className="chip" key={format}>
+                      {format}
+                    </li>
+                  ))}
+                </ul>
+              </PlatformCardAnimated>
             </Reveal>
           ))}
         </RevealGroup>

@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
-import { m, useInView, useReducedMotion } from 'motion/react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { m, useInView, useMotionValue, useReducedMotion, useSpring } from 'motion/react'
 import type { MotionValue } from 'motion/react'
 import {
   IconChat,
@@ -226,6 +226,67 @@ function Slide({
  * device mockup, and the page must not imply an endorsement by any platform vendor
  * (product-design.md §1.3 makes the same point about the platform marks).
  */
+/** Maximum rotation in degrees. 12° is enough to read as 3D without distorting
+ * the phone's content or making the frame look broken. */
+const TILT_DEG = 12
+/** Spring config for the tilt — tight enough to track the cursor closely,
+ * damped enough that it settles without ringing. */
+const TILT_SPRING = { stiffness: 260, damping: 22, mass: 0.6 }
+
+/**
+ * Tracks mouse position relative to an element and returns sprung rotateX/rotateY
+ * values that tilt the element toward the pointer.
+ *
+ * Only activates on devices that can hover (desktops); on touch devices the phone
+ * stays flat and there is no phantom tilt from a tap.
+ */
+function useTilt3D(enabled: boolean) {
+  const rotateX = useMotionValue(0)
+  const rotateY = useMotionValue(0)
+  const springX = useSpring(rotateX, TILT_SPRING)
+  const springY = useSpring(rotateY, TILT_SPRING)
+
+  const onMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (!enabled) return
+      const rect = e.currentTarget.getBoundingClientRect()
+      // Normalise to -1 … +1 from the element's centre.
+      const nx = (e.clientX - rect.left) / rect.width - 0.5
+      const ny = (e.clientY - rect.top) / rect.height - 0.5
+      // rotateY follows the horizontal cursor position; rotateX is inverted so
+      // a pointer near the top tilts the top toward the viewer.
+      rotateX.set(-ny * TILT_DEG)
+      rotateY.set(nx * TILT_DEG)
+    },
+    [enabled, rotateX, rotateY],
+  )
+
+  const onMouseLeave = useCallback(() => {
+    // Spring back to neutral — the spring does the easing.
+    rotateX.set(0)
+    rotateY.set(0)
+  }, [rotateX, rotateY])
+
+  return { springX, springY, onMouseMove, onMouseLeave }
+}
+
+/**
+ * True when the pointer can hover, mirroring the `(hover: hover)` gate the
+ * stylesheet uses. Duplicated from Motion.tsx rather than exported, because the
+ * two files have no other coupling and the hook is four lines.
+ */
+function useHoverCapable() {
+  const [capable, setCapable] = useState(false)
+  useEffect(() => {
+    const query = window.matchMedia('(hover: hover)')
+    const onChange = () => setCapable(query.matches)
+    onChange()
+    query.addEventListener('change', onChange)
+    return () => query.removeEventListener('change', onChange)
+  }, [])
+  return capable
+}
+
 function Frame({
   children,
   frameRef,
@@ -233,28 +294,47 @@ function Frame({
   children: React.ReactNode
   frameRef?: React.Ref<HTMLDivElement>
 }) {
-  return (
-    <div className="showcase__phone" ref={frameRef}>
-      {/* On the rim, not inside it — the silhouette is most of what turns a rounded
-          rectangle into a phone. */}
-      <span className="showcase__key showcase__key--silence" aria-hidden="true" />
-      <span className="showcase__key showcase__key--volup" aria-hidden="true" />
-      <span className="showcase__key showcase__key--voldown" aria-hidden="true" />
-      <span className="showcase__key showcase__key--power" aria-hidden="true" />
+  const reduced = useReducedMotion()
+  const hoverable = useHoverCapable()
+  const tiltEnabled = !reduced && hoverable
+  const { springX, springY, onMouseMove, onMouseLeave } = useTilt3D(tiltEnabled)
 
-      <div className="showcase__bezel">
-        {/*
-          aria-hidden because the slide list is duplicated — a screen reader would
-          announce all five categories twice, and the announcement would be a
-          meaningless stream of nouns anyway. The figcaption carries the meaning.
-        */}
-        <div className="showcase__screen" aria-hidden="true">
-          {children}
-          {/* After {children} so both sit above the feed without needing a z-index. */}
-          <span className="showcase__island" />
-          <span className="showcase__home" />
+  return (
+    <div
+      className="showcase__tilt"
+      onMouseMove={tiltEnabled ? onMouseMove : undefined}
+      onMouseLeave={tiltEnabled ? onMouseLeave : undefined}
+    >
+      <m.div
+        className="showcase__phone"
+        ref={frameRef}
+        style={
+          tiltEnabled
+            ? { rotateX: springX, rotateY: springY }
+            : undefined
+        }
+      >
+        {/* On the rim, not inside it — the silhouette is most of what turns a rounded
+            rectangle into a phone. */}
+        <span className="showcase__key showcase__key--silence" aria-hidden="true" />
+        <span className="showcase__key showcase__key--volup" aria-hidden="true" />
+        <span className="showcase__key showcase__key--voldown" aria-hidden="true" />
+        <span className="showcase__key showcase__key--power" aria-hidden="true" />
+
+        <div className="showcase__bezel">
+          {/*
+            aria-hidden because the slide list is duplicated — a screen reader would
+            announce all five categories twice, and the announcement would be a
+            meaningless stream of nouns anyway. The figcaption carries the meaning.
+          */}
+          <div className="showcase__screen" aria-hidden="true">
+            {children}
+            {/* After {children} so both sit above the feed without needing a z-index. */}
+            <span className="showcase__island" />
+            <span className="showcase__home" />
+          </div>
         </div>
-      </div>
+      </m.div>
     </div>
   )
 }
