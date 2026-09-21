@@ -10,6 +10,7 @@ export const navLinks = [
   { href: '#platforms', label: 'Platforms' },
   { href: '#why-collaba', label: 'Why Collaba' },
   { href: '#how-it-works', label: 'How it works' },
+  { href: '/creators', label: 'For Creators' }
   // '#free-pilot' removed alongside the hidden OfferPanel — it would be a dead anchor.
 ]
 

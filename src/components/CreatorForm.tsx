@@ -382,11 +382,9 @@ export function CreatorForm() {
               <span className="success__badge">
                 <IconCheckCircle size={30} />
               </span>
-              <h3 className="h3">You&apos;re on the list — thanks, {submitted.firstName}.</h3>
+              <h3 className="h3">You&apos;re on the list! Thanks, {submitted.firstName}.</h3>
               <p>
-                We&apos;ll look through your profile and reply within two business days. When a
-                brand brief fits what you make, you hear from us directly — no bidding, no
-                auto-blasts.
+                We&apos;ll look through your profile and reach you out at the quickest possible.
               </p>
             </div>
           ) : (
