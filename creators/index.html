@@ -1,0 +1,64 @@
+<!doctype html>
+<!-- data-theme swaps the indigo scale for coral across this page only — see the
+     html[data-theme='creator'] block in src/styles/tokens.css. On <html> because
+     that is the element the tokens are declared on; anywhere lower and the semantic
+     tokens would have already resolved to indigo. -->
+<html lang="en" data-theme="creator">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Join Collaba as a creator — get discovered by brands</title>
+    <meta
+      name="description"
+      content="Join the Collaba.in creator roster and get matched with growing businesses looking for Instagram, YouTube, and Facebook creators. Agreed scope, agreed rate, no bidding."
+    />
+    <!-- --coral-600, the page's action colour, not the home page's indigo: this is
+         what tints the browser chrome on a phone, and it should match the page under
+         it. -->
+    <meta name="theme-color" content="#C24135" />
+    <meta name="color-scheme" content="light" />
+    <!-- Matches CREATORS_PATH in src/components/CreatorBanner.tsx. No .html and no
+         trailing slash: this file builds to dist/creators/index.html, so /creators
+         is the directory path a host serves it at. Declaring one canonical form
+         keeps /creators, /creators/ and /creators/index.html from being indexed as
+         three pages. Change the two together. -->
+    <link rel="canonical" href="https://collaba.in/creators" />
+    <meta name="robots" content="index, follow" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Collaba.in" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Collaba.in" />
+    <meta property="og:url" content="https://collaba.in/creators" />
+    <meta property="og:locale" content="en_IN" />
+    <meta property="og:title" content="Join Collaba as a creator — get discovered by brands" />
+    <meta
+      property="og:description"
+      content="Tell us where you post and what you post about. We bring you brand briefs that fit what you already make — agreed scope, agreed rate, no bidding."
+    />
+    <!-- The shared card image. Worth its own artwork once there is one; a missing
+         og:image is worse than a general one, because the link unfurls bare. -->
+    <meta property="og:image" content="https://collaba.in/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Collaba.in — relevant influencer collaborations for growing businesses"
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Join Collaba as a creator — get discovered by brands" />
+    <meta
+      name="twitter:description"
+      content="Get matched with growing businesses looking for creators like you. Agreed scope, agreed rate, no bidding."
+    />
+    <meta name="twitter:image" content="https://collaba.in/og-image.png" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/creators.tsx"></script>
+  </body>
+</html>

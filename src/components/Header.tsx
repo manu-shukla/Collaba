@@ -8,8 +8,8 @@ import { ScrollProgress, TapLink } from './Motion'
 /** Shared with the footer so the two link lists cannot drift apart. */
 export const navLinks = [
   { href: '#platforms', label: 'Platforms' },
-  { href: '#how-it-works', label: 'How it works' },
   { href: '#why-collaba', label: 'Why Collaba' },
+  { href: '#how-it-works', label: 'How it works' },
   // '#free-pilot' removed alongside the hidden OfferPanel — it would be a dead anchor.
 ]
 

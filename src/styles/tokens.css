@@ -25,17 +25,44 @@
   --indigo-800: #30238f;
   --indigo-900: #261c6b;
 
-  --coral-50: #fff3f1;
-  --coral-100: #ffe2de;
+  /* The two tint steps are lighter than the generated scale's #fff3f1 / #ffe2de. Both
+     went from accent trim — a chip, a corner of the hero wash — to carrying whole
+     backgrounds: the creators page canvas and the creator band's surface. At the
+     generated values a full-width block of coral-100 read heavy against the white
+     sections around it. Roughly a third of the way to white each, which keeps them
+     unmistakably peach while letting the type and the white cards sit on top.
+     Everything from --coral-200 down is unchanged — those are borders, marks and
+     text, where the extra weight is the point. */
+  --coral-50: #fff8f7;
+  --coral-100: #ffecea;
   --coral-200: #ffc8c1;
   --coral-300: #ffa095;
   --coral-400: #ff6b5f;
   --coral-500: #e65347;
   --coral-600: #c24135;
   --coral-700: #9f342b;
+  /* Two steps past the generated scale, added when coral became a whole page's
+     theme rather than an accent: the creators page needs somewhere for the deepest
+     indigo steps to land (see the html[data-theme='creator'] block below), and the
+     scale stopped at a value that is still a mid-dark red. Continues the same ramp
+     — each step roughly 0.79x the previous one's channel values. */
+  --coral-800: #7e2922;
+  --coral-900: #5c1e19;
 
+  /* Green was two steps — a status tint and a status foreground — until the
+     creator band asked for a green surface of its own. The scale below fills in
+     around them without moving either: --green-50 is still the success tint and
+     --green-600 still --text-success, so nothing that already used green changed
+     colour. Only the band uses the rest. */
   --green-50: #ecfdf3;
+  --green-100: #d1fadf;
+  --green-200: #a6f4c5;
+  --green-400: #32d583;
+  --green-500: #12b76a;
   --green-600: #15803d;
+  --green-700: #067647;
+  --green-800: #05603a;
+  --green-900: #044730;
   --amber-50: #fffaeb;
   --amber-700: #b54708;
   --red-50: #fef3f2;
@@ -79,6 +106,15 @@
   --action-link-hover: var(--indigo-800);
   --action-disabled-bg: var(--ink-100);
   --action-disabled-text: var(--ink-400);
+
+  /* The business side's own colour, named so it can be asked for by role rather than
+     by hue. A page can retheme the indigo scale out from under every other token —
+     see html[data-theme='creator'] — and these three still mean "indigo, because the
+     thing you are pointing at is the business side". The -inverse step is for the
+     dark footer, where indigo-600 is 2.2:1 and unreadable. */
+  --brand-business: var(--indigo-600);
+  --brand-business-hover: var(--indigo-800);
+  --brand-business-inverse: var(--indigo-300);
 
   --status-success-bg: var(--green-50);
   --status-success-fg: var(--green-600);
@@ -193,6 +229,72 @@
    */
   --band-padding: calc(var(--section-padding) * 0.4);
   --anchor-offset: calc(var(--header-h) + var(--sp-2));
+}
+
+/**
+ * The creators page, themed coral instead of indigo.
+ *
+ * Set by `data-theme="creator"` on <html> in creators/index.html — the home page
+ * carries no attribute and is unaffected. It has to be on <html> and not on a
+ * wrapper inside the page: the semantic tokens above are declared on :root and
+ * resolve their var() references against :root's own values, so a primitive
+ * remapped further down the tree would never reach --action-primary. Same element,
+ * and everything downstream follows.
+ *
+ * The indigo primitives are remapped rather than each semantic token being
+ * rewritten, because the pages share their CSS: .hero, .chip, .step__num, .tick and
+ * two dozen other rules reach for --indigo-N directly, and a page theme that only
+ * moved the semantic layer would have left indigo scattered through a coral page.
+ * Hue for hue, step for step — the ramps have the same shape, so nothing changes
+ * weight.
+ *
+ * Why coral: it is the colour of the "Join as a Creator" button that brings people
+ * here, so the page they land on is the colour of the thing they clicked. Indigo
+ * stays the business side's colour, which is the whole point of the split.
+ */
+html[data-theme='creator'] {
+  --indigo-50: var(--coral-50);
+  --indigo-100: var(--coral-100);
+  --indigo-200: var(--coral-200);
+  --indigo-300: var(--coral-300);
+  --indigo-400: var(--coral-400);
+  --indigo-500: var(--coral-500);
+  --indigo-600: var(--coral-600);
+  --indigo-700: var(--coral-700);
+  --indigo-800: var(--coral-800);
+  --indigo-900: var(--coral-900);
+
+  /* Coral is a warmer, lighter hue than indigo at the same step, so the steps that
+     carry white text have to move down one. White on --coral-500 is 3.9:1, under
+     the 4.5:1 a 16px button label needs; --coral-600 is 5.1:1 and --coral-700 is
+     7:1. Everything else inherits from the remap above. */
+  --bg-brand: var(--coral-600);
+  --border-brand: var(--coral-600);
+  --action-primary: var(--coral-600);
+  --action-primary-hover: var(--coral-700);
+  --action-primary-pressed: var(--coral-800);
+  --action-secondary-text: var(--coral-700);
+  --action-link-hover: var(--coral-800);
+
+  /* The page canvas goes warm with everything else. --ink-50 is a lilac-tinted grey,
+     and it was the one cool surface left on a coral page: the application section
+     takes the canvas, so the form sat in a grey band between a peach hero and white
+     sections above it. --coral-50 keeps the same relationship the home page has —
+     white cards on a tinted canvas — in this page's own hue. */
+  --bg-canvas: var(--coral-50);
+
+  /* "For businesses" is the one link on this page that leaves it, and its colour is
+     the signpost: indigo means the business side everywhere else on the site, so the
+     link wears its destination rather than this page's theme. Literal hexes because
+     --indigo-600/800/300 are coral inside this block — which is the whole point of
+     the block, and the reason these three tokens exist. */
+  --brand-business: #4935d4;
+  --brand-business-hover: #30238f;
+  --brand-business-inverse: #aa9aff;
+
+  /* The focus ring's rgba cannot come from the remap — it is a literal in the base
+     token. --coral-400 at the same alpha. */
+  --shadow-focus: 0 0 0 3px rgba(255, 107, 95, 0.38);
 }
 
 @media (min-width: 48rem) {

@@ -1135,6 +1135,17 @@ textarea {
   background: var(--ink-300);
 }
 
+/* Closes the list instead of extending it: lighter, italic, and no dot in front,
+   so it reads as "…and so on" rather than as a sixth category. */
+.strip__more {
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
+.strip__list li + .strip__more::before {
+  display: none;
+}
+
 @media (min-width: 48rem) {
   .strip__list {
     gap: var(--sp-1-5) var(--sp-2);
@@ -1221,6 +1232,31 @@ textarea {
   margin-bottom: var(--sp-2);
 }
 
+/* The icon form of the badge. Same 2.5rem box and same place in the flow as
+   .step__num, because the connector line's vertical offset is measured to the
+   badge's centre and the two must be interchangeable. Tinted rather than solid:
+   a filled indigo square would read as a button, and unlike the number the glyph
+   inside it is the thing worth looking at. */
+.step__badge {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-md);
+  background: var(--indigo-100);
+  color: var(--indigo-600);
+  margin-bottom: var(--sp-2);
+}
+
+/* Where the number goes once the badge is an icon. */
+.step__label {
+  font-size: var(--fs-sm);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--text-brand);
+  margin-bottom: var(--sp-half);
+}
+
 .step h3 {
   margin-bottom: var(--sp-1);
 }
@@ -1235,7 +1271,8 @@ textarea {
     padding-top: var(--sp-4);
   }
 
-  .step__num {
+  .step__num,
+  .step__badge {
     position: absolute;
     top: var(--sp-3);
     left: var(--sp-3);
@@ -1750,6 +1787,11 @@ textarea {
 .field {
   display: grid;
   gap: var(--sp-half);
+  /* Two fields side by side in a --two grid are the same height, and without this
+     the rows of the shorter one stretch to match — so the input next to a field
+     carrying a hint grew a ~30px taller box for no reason. Pins each row to its
+     own content height and lets the leftover space fall below. */
+  align-content: start;
 }
 
 .field__label {
@@ -2153,6 +2195,330 @@ textarea {
 }
 
 /* ============================================================
+   Creator band
+   ============================================================ */
+
+/* Edge to edge, but still a card: the coral is the section's own surface so the band
+   spans the viewport like the footer below it, and the rounded top corners plus the
+   upward shadow lift that surface off the white above it. A shadow on all four sides
+   would have been invisible — the left and right edges are the viewport, and the
+   bottom is flush against the footer — so the elevation is spent where it can be
+   seen. isolation + overflow: clip keep the bloom in ::before behind the content and
+   inside the band without letting it widen the page.
+
+   Padding is 1.6x --band-padding: the one-row version at flat --band-padding sat too
+   close to its own edges for a surface that is now raised, and a card needs to look
+   like it has walls. Still well under --section-padding, so the band does not read as
+   a fourth pitch. */
+.creatorband {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  padding-block: calc(var(--band-padding) * 1.6);
+
+  /* Coral, the site's accent, via the same --coral-50/100 pair as .chip--accent and
+     the hero wash. It replaces a green surface that was the only green on the site:
+     a one-off colour had nothing else to agree with, while coral is already the
+     page's warm note. The point is unchanged — everything above this band is indigo
+     because it is addressed to a business, and the colour change is what tells a
+     creator at a glance that this row is not more of the same pitch.
+
+     Vertical ramp: near-white at the top so the card's lit edge reads against the
+     FAQ, deepest tint at the bottom where it meets the footer's dark slab. */
+  background: linear-gradient(180deg, var(--coral-50), var(--coral-100));
+  border-top: var(--bw-thin) solid var(--white);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  box-shadow: 0 -12px 32px -16px rgba(23, 20, 38, 0.16);
+}
+
+/* One soft bloom off-centre behind the copy. Flat --coral-50 read as a grey-pink slab
+   at this width; the bloom gives the card a lit side without a second border. Literal
+   rgba of --coral-400 because the colour needs an alpha the token set does not
+   carry. */
+.creatorband::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse 55% 85% at 28% 30%, rgba(255, 107, 95, 0.12), transparent 70%);
+  pointer-events: none;
+}
+
+/* One row: marks, copy, button. On a phone the marks and copy share the first row
+   and the button takes the second, so the band is two short rows rather than four
+   stacked blocks. */
+.creatorband__inner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--sp-1-5) var(--sp-2);
+}
+
+/* The button moves up beside the copy as soon as the row can hold it. auto in the
+   third column so it keeps its own width and the copy absorbs the rest — on a
+   full-bleed surface the copy can spread without leaving a hole in the middle, the
+   way a narrow card did. */
+@media (min-width: 48rem) {
+  .creatorband__inner {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: var(--sp-3);
+  }
+}
+
+/* --text-primary, not the accent: coral-600 on coral-50 is the .chip--accent pairing
+   and works at chip size, but a 24px heading in it turned the whole card into one
+   wash of orange. Ink keeps the heading the highest-contrast thing in the band, which
+   is what it should be, and lets the surface carry the colour on its own. */
+.creatorband__title {
+  font-family: var(--font-brand);
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+  line-height: var(--lh-snug);
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+/* One step down from the heading rather than a second tint of the surface colour: a
+   coral subline made the two lines read as one block of colour instead of a heading
+   and its answer. */
+.creatorband__sub {
+  color: var(--text-secondary);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+}
+
+/* Full-width on a phone, where a left- or right-aligned pill on its own row leaves
+   a dead half-row beside it and a thumb has to reach across for it. */
+.creatorband__cta {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+@media (min-width: 48rem) {
+  .creatorband__cta {
+    grid-column: auto;
+    width: auto;
+    padding-inline: var(--sp-4);
+  }
+}
+
+/* .btn--secondary carries indigo text and an indigo-tinted hover, which is the one
+   thing on the site that cannot come along onto the accent surface. Overridden here
+   rather than added as a .btn--onAccent modifier because there is exactly one band
+   like this — a global variant would be a promise of more.
+
+   Filled rather than outlined: an outline button on a tinted card had less weight
+   than the heading beside it, so the right-hand end of the row looked unfinished.
+   coral-600, not --coral-400/500, because white text needs 4.5:1 at this size and
+   only 600 and darker clear it. Not --action-primary either, so it still cannot be
+   mistaken for the page's business CTA. */
+.creatorband__cta.btn--secondary {
+  background: var(--coral-600);
+  border-color: var(--coral-600);
+  color: var(--text-inverse);
+  box-shadow: var(--shadow-sm);
+}
+
+@media (hover: hover) {
+  .creatorband__cta.btn--secondary:hover {
+    background: var(--coral-700);
+    border-color: var(--coral-700);
+    color: var(--text-inverse);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.creatorband__cta.btn--secondary:active {
+  background: var(--coral-700);
+  border-color: var(--coral-700);
+  box-shadow: var(--shadow-xs);
+}
+
+/* Overlapped by a quarter so three marks read as one group — a plain gap made them
+   look like three unrelated buttons. */
+.creatorband__marks {
+  display: inline-flex;
+}
+
+.creatorband__mark + .creatorband__mark {
+  margin-left: calc(var(--sp-1) * -1);
+}
+
+/* White disc, not a tinted one: these are the real marks in their own colours, and
+   Instagram's gradient and Facebook's blue only hold up on white. The ring is the
+   band's own coral so the chips still belong to the surface they sit on. */
+.creatorband__mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-pill);
+  background: var(--white);
+  border: var(--bw-thin) solid var(--coral-100);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ============================================================
+   Creators page — slim header
+   ============================================================ */
+
+/* The home page's .header is sticky, carries the scroll-progress bar and hides a
+   drawer behind a burger, all of which exist to serve one long scroll. A page
+   that is a pitch and a form needs a line at the top instead. */
+.pageheader {
+  background: var(--bg-surface);
+  border-bottom: var(--bw-thin) solid var(--border-default);
+}
+
+.pageheader__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  min-height: var(--header-h);
+}
+
+/* --brand-business, not --action-link: this link is the door back to the business
+   side, and on a coral page --action-link is coral, which made the one outbound link
+   look like part of the creator theme. Indigo says where it goes. */
+.pageheader__back {
+  display: inline-flex;
+  align-items: center;
+  /* Well under a thumb target as bare inline text — see .link-quiet. */
+  min-height: var(--touch-min);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--brand-business);
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .pageheader__back:hover {
+    color: var(--brand-business-hover);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+}
+
+/* ---- hero ---- */
+
+/* Lighter than the home hero's canvas → brand → coral sweep, and without the second
+   hue: this page's own accent is the brand colour in the headline, and a corner in a
+   second colour pulled the eye away from the phone. The --indigo-N steps here are
+   coral on this page — see the theme block in tokens.css. */
+.hero--creator {
+  background: linear-gradient(160deg, var(--bg-surface) 0%, var(--indigo-50) 70%, var(--indigo-100) 100%);
+}
+
+/* Keeps the home hero's 7fr/5fr — the copy column has a four-line headline and a
+   three-item tick row to fit, and at 6fr/6fr the row broke onto two lines.
+   `min-width: 0` because an fr track still floors at its content's min-content
+   width, and a headline with "collaboration" in it has a wide one. */
+@media (min-width: 64rem) {
+  .hero--creator .hero__copy {
+    min-width: 0;
+  }
+}
+
+/* A filled label, where .eyebrow is a dotted line of text. Same role, different
+   weight — see the note in CreatorHero. */
+.chip-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--sp-half) var(--sp-1-5);
+  border-radius: var(--radius-pill);
+  background: var(--indigo-100);
+  color: var(--indigo-700);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* The home hero's trust row is one muted line of fine print. This one is three
+   answers to three objections, so it carries a tick each and full-strength text. */
+.hero__trust--ticks {
+  /* sp-2, not sp-3: the three items plus their ticks come to just over the
+     column's width at the wider gap, so the last one dropped to its own line. */
+  gap: var(--sp-1) var(--sp-2);
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.hero__trust--ticks li {
+  gap: var(--sp-1);
+}
+
+.tick {
+  display: grid;
+  place-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: var(--radius-pill);
+  background: var(--indigo-500);
+  color: var(--white);
+  flex: none;
+}
+
+/* ---- hero artwork ---- */
+
+.creatorhero__art {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/**
+ * How the artwork's background gets removed.
+ *
+ * The file ships with a solid white background — it has an alpha channel, but
+ * every pixel in it is opaque. Cutting the white out by flood-filling from the
+ * edges does not work on this image: the notification cards are themselves white
+ * and their anti-aliased edges connect that white to the outside, so the fill
+ * leaks in, hollows the cards out and leaves a ragged halo where it stopped.
+ *
+ * multiply needs no cutout at all. White is the identity colour under multiply, so
+ * every white pixel takes the colour of whatever is behind it and disappears,
+ * while the shadows stay shadows and the cards keep their frosted look.
+ *
+ * The one condition: the surface behind it has to stay light. multiply can only
+ * darken, so on a dark background the whole image would go with it. That is safe
+ * here — .hero--creator is a white-to-indigo-100 gradient — but it is the thing to
+ * check before restyling this hero.
+ */
+.creatorhero__art {
+  mix-blend-mode: multiply;
+}
+
+/* ---- how it works ---- */
+
+.creatorsteps__head {
+  display: grid;
+  gap: var(--sp-1);
+  margin-bottom: var(--sp-5);
+}
+
+/* Heading left, aside bottom-right on the same line. Baseline-ish alignment via
+   `end` rather than `center`: the aside is one line against a heading of two, and
+   centred it floated in the middle of the block looking unattached. */
+@media (min-width: 64rem) {
+  .creatorsteps__head {
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: var(--sp-3);
+  }
+}
+
+.creatorsteps__aside {
+  color: var(--text-secondary);
+  font-size: var(--fs-sm);
+}
+
+/* The step row itself is the shared .steps/.step block further up this file. Only
+   the two pieces the icon variant adds live here. */
+
+/* ============================================================
    Footer
    ============================================================ */
 
@@ -2206,11 +2572,24 @@ textarea {
   align-items: center;
 }
 
+/* The light step of the business indigo, not --brand-business: indigo-600 on the
+   footer's ink-900 is 2.2:1. See the token note. */
+.footer__links a.footer__link--business {
+  color: var(--brand-business-inverse);
+  font-weight: 600;
+}
+
 @media (hover: hover) {
   .footer__links a:hover {
     color: var(--white);
     text-decoration: underline;
     text-underline-offset: 0.2em;
+  }
+
+  /* Its own rule because the colour above it is a class-on-element selector and would
+     otherwise outrank the plain :hover. */
+  .footer__links a.footer__link--business:hover {
+    color: var(--white);
   }
 }
 

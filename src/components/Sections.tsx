@@ -1,9 +1,8 @@
-import { useRef } from 'react'
-import { m, useReducedMotion, useScroll, useSpring } from 'motion/react'
 import { Reveal, RevealGroup, SectionScene } from './Motion'
 import { IconBolt, IconRupee, IconShieldCheck, IconTarget } from './Icons'
 import { PLATFORMS } from './PlatformIcons'
 import { PlatformCardAnimated } from './PlatformCardAnimated'
+import { StepList } from './StepList'
 
 // Concrete outcomes a local business would recognise, in the register the rest of
 // the page uses. The previous five mixed vocabularies: "local discovery" and
@@ -101,22 +100,6 @@ const steps = [
 ]
 
 export function HowItWorks() {
-  const stepsRef = useRef<HTMLDivElement | null>(null)
-  const reduced = useReducedMotion()
-
-  // The connector now tracks reading position instead of firing once on entry:
-  // it starts drawing as the row enters from the bottom and completes as the row
-  // passes the middle of the screen, so the line grows under the reader's eye.
-  const { scrollYProgress } = useScroll({
-    target: stepsRef,
-    offset: ['start 90%', 'end 60%'],
-  })
-  const lineScale = useSpring(scrollYProgress, {
-    stiffness: 140,
-    damping: 26,
-    restDelta: 0.001,
-  })
-
   return (
     // --surface so this alternates with WhyCollaba above it and the lead form
     // below, both of which sit on the canvas. It was the canvas itself until
@@ -142,34 +125,7 @@ export function HowItWorks() {
           </p>
         </Reveal>
 
-        {/* Wrapper exists to position the line: an absolutely-positioned element
-            cannot be a child of the <ol>, and a ::before pseudo-element cannot be
-            driven by a MotionValue. Left unbound under reduced motion, where the
-            CSS default draws it at full width. */}
-        <div className="steps__wrap" ref={stepsRef}>
-          <m.span
-            className="steps__line"
-            aria-hidden="true"
-            style={reduced ? undefined : { scaleX: lineScale }}
-          />
-
-          <RevealGroup as="ol" className="steps">
-            {steps.map((step, index) => (
-              <Reveal as="li" key={step.title} className="step">
-                <span className="step__num" aria-hidden="true">
-                  {index + 1}
-                </span>
-                <div className="step__body">
-                  <h3 className="h3">
-                    <span className="visually-hidden">Step {index + 1}: </span>
-                    {step.title}
-                  </h3>
-                  <p>{step.body}</p>
-                </div>
-              </Reveal>
-            ))}
-          </RevealGroup>
-        </div>
+        <StepList steps={steps} />
       </SectionScene>
     </section>
   )

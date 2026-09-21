@@ -225,3 +225,38 @@ export const IconShare = ({ size = 16, className }: IconProps) => (
     <path d="M21 3l-7 18-3.5-7.5L3 10 21 3Z" />
   </svg>
 )
+
+/* The creator flow: making something, being matched, agreeing a deal. The play
+   triangle is filled because at 26px a 1.75px outline triangle inside a circle
+   reads as noise rather than as a play button. */
+export const IconPlayCircle = ({ size = 20, className }: IconProps) => (
+  <svg {...base(size)} className={className}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M10.4 9.2l5 2.8-5 2.8V9.2Z" fill="currentColor" stroke="none" />
+  </svg>
+)
+
+export const IconUsers = ({ size = 20, className }: IconProps) => (
+  <svg {...base(size)} className={className}>
+    <circle cx="9" cy="8.5" r="3.25" />
+    <path d="M3.5 19.5a5.5 5.5 0 0 1 11 0" />
+    <path d="M16 5.9a3.25 3.25 0 0 1 0 5.2" />
+    <path d="M17.5 14.6a5.5 5.5 0 0 1 3 4.9" />
+  </svg>
+)
+
+/**
+ * An agreed brief: a page with a tick on it.
+ *
+ * The design showed a handshake here. Two clasped hands need a dozen curves to
+ * read as hands at all, and at the 26px this is drawn at the first attempt came out
+ * an unreadable squiggle — where a page with a tick is unambiguous at any size and
+ * says the same thing, which is that the terms are settled.
+ */
+export const IconDealSigned = ({ size = 20, className }: IconProps) => (
+  <svg {...base(size)} className={className}>
+    <path d="M6 3.25h8L18.75 8v12.75H6V3.25Z" />
+    <path d="M13.75 3.5V8.25h4.75" />
+    <path d="m9 14.25 2 2 4-4.5" />
+  </svg>
+)

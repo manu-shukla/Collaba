@@ -36,6 +36,16 @@ service cloud.firestore {
       allow read, update, delete: if false;
     }
 
+    // The creator side of the marketplace, written by the form on /creators.
+    // Same shape of rule as leads and for the same reasons — a public form has to
+    // allow anonymous creates, a field cap is the only limit that survives a change
+    // to the form, and client reads stay closed because these documents carry a
+    // creator's name, email, phone number and profile link.
+    match /creators/{creatorId} {
+      allow create: if request.resource.data.size() <= 30;
+      allow read, update, delete: if false;
+    }
+
     // Everything else is closed. Without this, a collection added later is
     // unprotected until someone remembers to write a rule for it.
     match /{document=**} {

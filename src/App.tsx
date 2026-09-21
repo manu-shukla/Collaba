@@ -10,6 +10,7 @@ import { HowItWorks, Platforms, WhyCollaba } from './components/Sections'
 // import { OfferPanel } from './components/OfferPanel'
 import { LeadForm } from './components/LeadForm'
 import { Faq } from './components/Faq'
+import { CreatorBanner } from './components/CreatorBanner'
 import { Footer } from './components/Footer'
 import { StickyCta } from './components/StickyCta'
 import { MotionProvider } from './components/Motion'
@@ -36,6 +37,9 @@ export default function App() {
         {/* <OfferPanel /> */}
         <LeadForm />
         <Faq />
+        {/* Last thing on the page, and the only one addressed to a creator rather
+            than a business — see the note in CreatorBanner. */}
+        <CreatorBanner />
       </main>
       <Footer />
       <StickyCta />

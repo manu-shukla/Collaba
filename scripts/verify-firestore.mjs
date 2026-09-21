@@ -1,10 +1,10 @@
 /**
- * Checks firestore.rules against the lead-write path.
+ * Checks firestore.rules against both public write paths.
  *
- * Submits the exact document shape src/lib/leads.ts produces and confirms it is
- * accepted, then confirms every write that must not be allowed is refused —
- * reading leads back from the client above all, since that would publish every
- * submitter's name, email and phone number.
+ * Submits the exact document shapes src/lib/leads.ts and src/lib/creators.ts
+ * produce and confirms both are accepted, then confirms every write that must not
+ * be allowed is refused — reading either collection back from the client above
+ * all, since that would publish every submitter's name, email and phone number.
  *
  * The rules name no fields, so this script does not check field-level validation
  * either; that lives in the form. See the note at the bottom.
@@ -13,9 +13,10 @@
  *   npm run verify:rules                  # emulator on 127.0.0.1:8080
  *   node scripts/verify-firestore.mjs --prod
  *
- * The --prod run writes one lead labelled "TEST — delete me" to the real project
- * and cannot clean up after itself (the rules deny delete, by design). Use it to
- * confirm a rules deployment landed, then delete that lead from the console.
+ * The --prod run writes one lead and one creator application, both labelled
+ * "TEST — delete me", to the real project and cannot clean up after itself (the
+ * rules deny delete, by design). Use it to confirm a rules deployment landed, then
+ * delete both documents from the console.
  *
  * Expect "evaluation error at L…" lines from the emulator on the rejected writes.
  * They are noise, not a rules defect: a write carrying serverTimestamp() is
@@ -72,8 +73,27 @@ const validLead = () => ({
   status: 'new',
 })
 
+/** What the creators page sends. Mirrors src/lib/creators.ts. */
+const validCreator = () => ({
+  fullName: useProd ? 'TEST — delete me (integration check)' : 'Test Creator',
+  city: 'Pune',
+  platforms: ['instagram'],
+  profileLink: '@testcreator',
+  email: 'creator@example.com',
+  mobile: '+91 98765 43210',
+  mobileDigits: '919876543210',
+  consent: true,
+  createdAt: serverTimestamp(),
+  source: 'collaba.in-creators',
+  pagePath: '/creators',
+  referrer: null,
+  userAgent: 'verify-firestore.mjs',
+  status: 'new',
+})
+
 let failures = 0
 const leads = collection(db, 'leads')
+const creators = collection(db, 'creators')
 
 async function expectAllowed(name, run) {
   try {
@@ -101,11 +121,21 @@ async function expectDenied(name, run) {
   }
 }
 
-console.log('what the form does:')
+console.log('what the forms do:')
 const id = await expectAllowed('submit a valid lead', async () => (await addDoc(leads, validLead())).id)
+const creatorId = await expectAllowed(
+  'submit a valid creator application',
+  async () => (await addDoc(creators, validCreator())).id,
+)
 
 console.log('\nwhat the rules must refuse:')
 await expectDenied('read a lead back from the client', () => getDocs(leads))
+await expectDenied('read creator applications from the client', () => getDocs(creators))
+if (creatorId) {
+  await expectDenied('read one creator application by id', () =>
+    getDoc(doc(db, 'creators', creatorId)),
+  )
+}
 if (id) {
   await expectDenied('read one lead by id', () => getDoc(doc(db, 'leads', id)))
   // Not attempted against the real project. If the rules are open enough for this
